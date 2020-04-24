@@ -1,0 +1,31 @@
+---
+title: "Analyzing Data from the Midfield Project"
+author: "Javier Alvarez, Leah Hunt, and Joshua Kwak"
+output: pdf_document
+---
+
+#Introduction
+
+
+
+##Exploratoring the Data
+
+
+
+#Exploring the Change in the Proportion of Women Graduates in STEM Majors over Time
+
+
+
+#Exploring the Effect of Race and Gender on Drop Out Rates after Introductory Calculus
+
+
+
+#Appendix A: Data Wrangling Methods
+
+
+
+#Appendix B: Code Appendix
+
+```{r ref.label = knitr::all_labels(), echo = TRUE, eval = FALSE}
+
+```
