@@ -4,6 +4,10 @@ author: "Javier Alvarez, Leah Hunt, and Joshua Kwak"
 output: pdf_document
 ---
 
+```{r imports, echo=FALSE, include=FALSE}
+library(tidyr)
+```
+
 #Introduction
 
 
@@ -19,10 +23,47 @@ output: pdf_document
 #Exploring the Effect of Race and Gender on Drop Out Rates after Introductory Calculus
 
 
+#References
+(Format later)
+Richard Layton, Russell Long and Matthew Ohland
+  (2019). midfielddata: Student Record Data for 98,000
+  Undergraduates. R package version 0.1.0.
+  https://github.com/MIDFIELDR/midfielddata
+  
+https://nces.ed.gov/ipeds/cipcode/browse.aspx?y=55 (cip6 translations)  
+
+
 
 #Appendix A: Data Wrangling Methods
+  Due to the extensiveness of the data wrangling necessary for this project, we leave the description of the process to this appendix and exclude the code generating the model ready data for either component of the project from the Code Appendix. For scripts to generate the model ready data, contact the authors of this work.
+  The data released by the Midfield project was originally separated into four data tables, whose names and descriptions as well as the pertinent data to this analysis pulled from them can be found in the table below. 
 
+```{r midtables, echo=FALSE}
+midtables<-data.frame(Table = c("midfieldterms", "midfieldcourses", "midfieldstudents", "midfielddegrees"), Purpose = c("Shows the students' status by term", "Shows each instance of a student taking a class", "Shows personal information about each student", "Shows the end degree, or lack thereof, earned by each student"), UsefulData = c("Program of study by term", "Semester in which Calculus 1 was taken", "Race and Gender of each student", "Students that earned STEM degrees"))
 
+knitr::kable(
+  midtables,
+  digits = 3,
+  align = c('l',rep('c',2)), caption = "Midfield Data Tables"
+) %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "condensed"),
+    font_size = 12, latex_options = "HOLD_position")
+```
+  
+  In order to properly combine this data for our analysis, there were several major obsticals to overcome. The first consideration was identifying the STEM programs in the data. This was done by translating the six digit cip codes into a binary variable that identified the code as either within STEM or not within STEM. [cite cip website here] This method was used for both portions of the analysis.
+
+##Analysis Specific to Women in STEM
+  While finding the proportion of women STEM graduates by institution by year was rather straightforward, there were a few modelling decisions regarding the data. The first decision was to exclude all data that came from a year and institution that graduated fewer than 10 STEM students in the given year. This was done with the intention of helping to improve the reliability of the data. 
+  
+  INSERT FINAL DECISION ON WHICH DATA TO SELECT HERE; UNLESS THIS IS GOING INTO THE ANOVA SECTION ABOVE
+
+##Analysis Specific to Dropout Rates after Calculus 1
+  The most complicated challenge that we faced was to identify which semester the student took their first calculus course. This issue primarily involves the midfieldcourses data table. There are two identifiers for course in this table: course title and course code. While the course title can rather clearly identify courses that could be considered Calculus 1, only three institutions, institutions c, d, and l, provided course titles in the data. 
+  
+  This leaves the course code as an identifier of course. These codes, however, vary by institution and are not standardized to match to particular courses. In order to approach this issue and allow more of the data to be used, we began cross-referencing subsets of course codes from particular institutions in order to attempt to match the anonymized data to a particular institution or a particular coding key in order to figure out which course code matches to Calculus 1. Note that in the attempt to create this matching, we excluded math courses from the matching set then ensured the predicted Calculus 1 course appeared in the data set. The institutions that were identified using this method were institutions a, b, e, h, j, and l. We were unable to identify the remaining institutions, so they were excluded from the second part of our analysis.  
+  
+  Another major considertation to make was how to define when a student drops out of the STEM field in association with Calculus 1. Noting that the data considers each year to contain six semesters, we defined a student to have dropped out of the STEM field in association with Calculus 1 if they do not graduate with a STEM degree and they do not appear in a STEM program in the fourth, fifth, or sixth semesters following the most recent taking of the course. Simply put, we sample the time period between six months and a year after the course and see whether or not the student is still in STEM. The consideration of whether or not the graduate in STEM prevents the accidental elimination of any student that gradutates immediately or shortly after Calculus 1 while the slight delay between the measurement era and the actual taking of the course gives time for the student to choose to drop out or change majors and for this change to be recorded. 
 
 #Appendix B: Code Appendix
 
