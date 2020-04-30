@@ -30,3 +30,4 @@ m_f<-m_f[, keyby = .(term_degree, institution),
 m_f<-m_f[prop_fem>=0]
 m_f$term_degree<-as.factor(m_f$term_degree)
 m_f$institution<-as.factor(m_f$institution)
+fwrite(m_f, "master_anova.csv")
