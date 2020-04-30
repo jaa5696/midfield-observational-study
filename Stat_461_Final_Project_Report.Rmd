@@ -170,7 +170,7 @@ Therefore, we decide that all of our assumptions have been sufficiently met, so 
 
 ##Developing the Model
 In developing the logistic regression model, we will use a baseline of a white male. The resulting model is shown in the below table.
-```{r glm_table, echo=FALSE, warning=FALSE}
+```{r glm_table, echo=FALSE, warning=FALSE, out.width=".49\\linewidth", fig.show="hold"}
 knitr::kable(
   parameters::model_parameters(glm_model)[,c(1,2,3,6,8)],
   digits = 3,
@@ -182,7 +182,26 @@ knitr::kable(
     font_size = 12, latex_options = "HOLD_position")
 ```
 
-We see that the only significant predictors are gender, the native american race, and other races, all three of which positively influence the dropout rate. This tells us that our data suggests that gender does influence the impact of introductory calculus as a weed out course. Race, however, only affects the dropout rate after calculus 1 for students of Native American heritage and those from races that did not fall into any of the given categories.
+
+
+We see that the only significant predictors are gender, the native american race, and other races, all three of which positively influence the dropout rate. This tells us that our data suggests that gender does influence the impact of introductory calculus as a weed out course. Race, however, only affects the dropout rate after calculus 1 for students of Native American heritage and those from races that did not fall into any of the given categories. We can also view the predicted probability of dropping out by race and gender in the below table.
+
+
+```{r pred, echo=FALSE, out.width=".49\\linewidth", fig.show="hold"}
+test<-data.table(Race = c("White", "Asian", "Black", "Hispanic", "International", "Native American", "Other", "White", "Asian", "Black", "Hispanic", "International", "Native American", "Other"), Gender=c("Male","Male","Male","Male","Male","Male","Male","Female","Female","Female","Female","Female","Female","Female"))
+test$Prediction<-predict(glm_model,newdata = test,type="response")
+knitr::kable(
+  test,
+  digits = 3,
+  caption = "Prediction of Drop Out Probability by Race and Gender",
+  align = c('l',rep('c',4))
+) %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "condensed"),
+    font_size = 12, latex_options = "HOLD_position")
+```
+
+
 
 \begin{thebibliography}{9}
 \bibitem{data}
