@@ -27,7 +27,9 @@ library(ggplot2)
 
 
 #Exploring the Effect of Race and Gender on Drop Out Rates after Introductory Calculus
-The second portion to our analysis considers the role of the introductory calculus course as a weed out course for STEM majors. To consider this problem, we use the Midfield data to identify STEM students who took Calculus I and label them as either having dropped out of the STEM field in association with Calculus I or not having dropped out of the STEM field in association with introductory calculus.\footnote{A more detailed description of the data wrangling techniques and the methods by which the drop out variable was created can be found in Appendix A.} We then develop a logistic regression model to model each students' probability of dropping out after introductory calculus based on their race and gender. 
+The second portion to our analysis considers the role of the introductory calculus course as a weed out course for STEM majors. Introductory calculus is a requirement for nearly all STEM majors and is one of the most commonly cited reasons for students to leave the STEM major (INSERT CITATION HERE). While works such as that done by Rasmussen and Ellis have considered factors impacting the probability of continuing the calculus curriculum after the first calculus course, we wish to consider factors that impact students' probability of leaving the STEM major after introductory calculus, in particular to see how the probability varies by race and gender. 
+
+To consider this problem, we use the Midfield data to identify STEM students who took Calculus I and label them as either having dropped out of the STEM field in association with Calculus I or not having dropped out of the STEM field in association with introductory calculus.\footnote{A more detailed description of the data wrangling techniques and the methods by which the drop out variable was created can be found in Appendix A.} We then develop a logistic regression model to model each students' probability of dropping out after introductory calculus based on their race and gender. 
 
 ##Assumption Testing
 Logistic regression requires five assumptions to be satisfied: appropriate outcome structure, independence of observations, absence of multicollinearity, Linearity of independent vars and log odds, and sufficiently large sample size. The first and last of these are clearly met as we designed the dependent variable to be binary and the size of the sample considered is over 8,000 students.\footnote{The full Midfield dataset contains over 97,000 students. The smaller number used in the analysis is a result of filtering the students to STEM students who were identified as having taken an introductory calculus course.} The fourth is also trivially met as we are using all categorical variables. The remaining two assumptions, however, do need some consideration.
@@ -76,6 +78,8 @@ Richard Layton, Russell Long and Matthew Ohland
 https://nces.ed.gov/ipeds/cipcode/browse.aspx?y=55 (cip6 translations)  
 
 https://www.lexjansen.com/wuss/2018/130_Final_Paper_PDF.pdf (glm assumptions)
+
+http://homepages.math.uic.edu/~bshipley/Switching.Calculus.pdf
 
 #Appendix A: Data Wrangling Methods
   Due to the extensiveness of the data wrangling necessary for this project, we leave the description of the process to this appendix and exclude the code generating the model ready data for either component of the project from the Code Appendix. For scripts to generate the model ready data, contact the authors of this work.
