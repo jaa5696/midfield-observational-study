@@ -13,6 +13,7 @@ library(caret)
 library(rcompanion)
 library(ggplot2)
 library(hasseDiagram)
+library(kableExtra)
 ```
 
 #Introduction
@@ -147,14 +148,31 @@ The second portion to our analysis considers the role of the introductory calcul
 
 To consider this problem, we use the Midfield data to identify STEM students who took Calculus I and label them as either having dropped out of the STEM field in association with Calculus I or not having dropped out of the STEM field in association with introductory calculus.\footnote{A more detailed description of the data wrangling techniques and the methods by which the drop out variable was created can be found in Appendix A.} We then develop a logistic regression model to model each students' probability of dropping out after introductory calculus based on their race and gender. 
 
+##Exploratory Analysis
+```{r dinput, echo=FALSE, include=FALSE}
+train<-fread("master_glm.csv")
+train<-train[race!="Unknown" & sex!="Unknown"]
+train<-train[,race:=ifelse(race=="International", "Other", race)]
+#train<-train[,race:=ifelse(race=="International"|race=="Native American", "Other", race)]
+train$sex<-as.factor(train$sex)
+train$race<-as.factor(train$race)
+```
+
+```{r datavis, echo=FALSE, out.width=".75\\linewidth", fig.show="hold"}
+ggplot(data=train[race!="White"], aes(x=sex, fill = as.factor(dropout)))+  geom_bar() + facet_grid (~race) #+geom_bar(aes(fill=dropout), position="stack")
+
+```
+
+```{r white, echo=FALSE, out.width=".2\\linewidth", fig.show="hold"}
+ggplot(data=train[race=="White"], aes(x=sex, fill = as.factor(dropout)))+  geom_bar() + facet_grid (~race) #+geom_bar(aes(fill=dropout), position="stack")                                            
+
+```
+
+
 ##Assumption Testing
 Logistic regression requires five assumptions to be satisfied: appropriate outcome structure, independence of observations, absence of multicollinearity, linearity of independent vars and log odds, and sufficiently large sample size. \cite{glmassumptions} The first and last of these are clearly met as we designed the dependent variable to be binary and the size of the sample considered is over 8,000 students.\footnote{The full Midfield dataset contains over 97,000 students. The smaller number used in the analysis is a result of filtering the students to STEM students who were identified as having taken an introductory calculus course.} The fourth is also trivially met as we are using all categorical variables. The remaining two assumptions, however, do need some consideration.
 
 ```{r start_glm, echo=FALSE, include=FALSE}
-train<-fread("master_glm.csv")
-train<-train[race!="Unknown" & sex!="Unknown"]
-train$sex<-as.factor(train$sex)
-train$race<-as.factor(train$race)
 Gender <- factor(train$sex, levels=c('Male', 'Female'))
 Race<-factor(train$race, levels=c("White", "Asian", "Black", "Hispanic", "International", "Native American", "Other"))
 glm_model<-glm(dropout~Gender+Race,family=binomial, data=train)
@@ -163,6 +181,8 @@ glm_model<-glm(dropout~Gender+Race,family=binomial, data=train)
 car::vif(glm_model)
 ```
 To consider multicollinearity, we can use the variance inflation factor (vif). The calculated values for vif were 1.009 for each predictor, which is less than 4, the commonly used indicator of collinearity problems. Therefore, we may proceed under the assumption that this assumption holds.
+
+
 
 The last assumption, and most tricky to consider, is the independence of observations. While each student's measurements are taken individually without regard to any other student in the study, our data does not give any way for us to know that students, particularly in the same institution at the same time period, interact with or influence each other in a meaningful way. However, it is reasonable to assume that if these influences exist, they would be negligible, particularly considering that we are considering students' choices in educational field which would rarely be impacted by infuences from the choices of the other student.
 
@@ -184,11 +204,11 @@ knitr::kable(
 
 
 
-We see that the only significant predictors are gender, the native american race, and other races, all three of which positively influence the dropout rate. This tells us that our data suggests that gender does influence the impact of introductory calculus as a weed out course. Race, however, only affects the dropout rate after calculus 1 for students of Native American heritage and those from races that did not fall into any of the given categories. We can also view the predicted probability of dropping out by race and gender in the below table.
+We see that the only significant predictors are gender, the native american race, and other minority races, all three of which positively influence the dropout rate. This tells us that our data suggests that gender does influence the impact of introductory calculus as a weed out course. Race, however, only affects the dropout rate after calculus 1 for students of Native American heritage and those from races that did not fall into any of the given categories. We can also view the predicted probability of dropping out by race and gender in the below table.
 
 
 ```{r pred, echo=FALSE, out.width=".49\\linewidth", fig.show="hold"}
-test<-data.table(Race = c("White", "Asian", "Black", "Hispanic", "International", "Native American", "Other", "White", "Asian", "Black", "Hispanic", "International", "Native American", "Other"), Gender=c("Male","Male","Male","Male","Male","Male","Male","Female","Female","Female","Female","Female","Female","Female"))
+test<-data.table(Race = c("White", "Asian", "Black", "Hispanic",  "Native American", "Other", "White", "Asian", "Black", "Hispanic",  "Native American", "Other"), Gender=c("Male","Male","Male","Male","Male","Male","Female","Female","Female","Female","Female","Female"))
 test$Prediction<-predict(glm_model,newdata = test,type="response")
 knitr::kable(
   test,
@@ -201,7 +221,7 @@ knitr::kable(
     font_size = 12, latex_options = "HOLD_position")
 ```
 
-
+\newpage
 
 \begin{thebibliography}{9}
 \bibitem{data}
@@ -225,6 +245,8 @@ https://advances.asee.org/wp-content/uploads/vol05/issue02/Papers/AEE-18-Ohland.
 
 \end{thebibliography}
 
+\newpage
+
 #Appendix A: Data Wrangling Methods
   Due to the extensiveness of the data wrangling necessary for this project, we leave the description of the process to this appendix and exclude the code generating the model ready data for either component of the project from the Code Appendix. For scripts to generate the model ready data, contact the authors of this work.
   The data released by the Midfield project was originally separated into four data tables, whose names and descriptions as well as the pertinent data to this analysis pulled from them can be found in the table below. 
@@ -239,7 +261,10 @@ knitr::kable(
 ) %>%
   kableExtra::kable_styling(
     bootstrap_options = c("striped", "condensed"),
-    font_size = 12, latex_options = "HOLD_position")
+    font_size = 12, latex_options = "HOLD_position")%>%
+     column_spec(1, width = '1.1in') %>%
+      column_spec(2, width = "2.5in")%>%
+  column_spec(3, width = "2.5in")
 ```
   
   In order to properly combine this data for our analysis, there were several major obsticals to overcome. The first consideration was identifying the STEM programs in the data. This was done by translating the six digit cip codes into a binary variable that identified the code as either within STEM or not within STEM. \cite{cip6} This method was used for both portions of the analysis.
@@ -256,6 +281,7 @@ knitr::kable(
   
   Another major considertation to make was how to define when a student drops out of the STEM field in association with Calculus 1. Noting that the data considers each year to contain six semesters, we defined a student to have dropped out of the STEM field in association with Calculus 1 if they do not graduate with a STEM degree and they do not appear in a STEM program in the fourth, fifth, or sixth semesters following the most recent taking of the course. Simply put, we sample the time period between six months and a year after the course and see whether or not the student is still in STEM. The consideration of whether or not the graduate in STEM prevents the accidental elimination of any student that gradutates immediately or shortly after Calculus 1 while the slight delay between the measurement era and the actual taking of the course gives time for the student to choose to drop out or change majors and for this change to be recorded. 
 
+\newpage
 #Appendix B: Code Appendix
 
 ```{r ref.label = knitr::all_labels(), echo = TRUE, eval = FALSE}
