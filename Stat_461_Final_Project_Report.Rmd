@@ -14,6 +14,7 @@ library(rcompanion)
 library(ggplot2)
 library(hasseDiagram)
 library(kableExtra)
+library(cowplot)
 ```
 
 #Introduction
@@ -146,31 +147,48 @@ Table 1 gives the values of various descriptive statistics for the proportion of
 #Exploring the Effect of Race and Gender on Drop Out Rates after Introductory Calculus
 The second portion to our analysis considers the role of the introductory calculus course as a weed out course for STEM majors. Introductory calculus is a requirement for nearly all STEM majors and is one of the most commonly cited reasons for students to leave the STEM major. \cite{paper} While works such as that done by Rasmussen and Ellis have considered factors impacting the probability of continuing the calculus curriculum after the first calculus course, we wish to consider factors that impact students' probability of leaving the STEM major after introductory calculus, in particular to see how the probability varies by race and gender. 
 
-To consider this problem, we use the Midfield data to identify STEM students who took Calculus I and label them as either having dropped out of the STEM field in association with Calculus I or not having dropped out of the STEM field in association with introductory calculus.\footnote{A more detailed description of the data wrangling techniques and the methods by which the drop out variable was created can be found in Appendix A.} We then develop a logistic regression model to model each students' probability of dropping out after introductory calculus based on their race and gender. 
+To consider this problem, we use the Midfield data to identify STEM students who took Calculus I and label them as either having dropped out of the STEM field in association with Calculus I or not having dropped out of the STEM field in association with introductory calculus.\footnote{A more detailed description of the data wrangling techniques and the methods by which the drop out variable was created can be found in Appendix A.} We then develop a logistic regression model to model each students' probability of dropping out after introductory calculus based on their race and gender in order to test our hypothesis that at least one of race and gender affect a student's probability of dropping out of the STEM program after introductory calculus against the null hypothesis that neither is a significant factor. 
 
 ##Exploratory Analysis
+We begin by visualizaing the collected dropout data.
 ```{r dinput, echo=FALSE, include=FALSE}
 train<-fread("master_glm.csv")
 train<-train[race!="Unknown" & sex!="Unknown"]
 train<-train[,race:=ifelse(race=="International", "Other", race)]
 #train<-train[,race:=ifelse(race=="International"|race=="Native American", "Other", race)]
+#train$sex<-as.factor(train$sex)
+#train$race<-as.factor(train$race)
+```
+
+```{r datavis, echo=FALSE, include=FALSE}
+trainp<-train[,race:=ifelse(race=="Native American", "Nat. Am.", race)]
+trainp<-trainp[race!="White"]
+trainp<-trainp[,sex:=ifelse(sex=="Male", "M", "F")]
+trainp<-trainp[,dropout:=ifelse(dropout==1, "Yes", "No")]
+gg1<-ggplot(data=trainp, aes(x=sex, fill = as.factor(dropout)))+  geom_bar() + facet_grid (~race)+ theme(legend.position="top")+ labs(fill="Dropout") #+geom_bar(aes(fill=dropout), position="stack")
+
+```
+
+```{r white, echo=FALSE, fig.show="hold", fig.cap="Visualization of dropout data by race and gender. The white group has by far the most students and is therefore set apart from the minority races.", fig.width = 6, fig.height = 4}
+trainp<-train[race=="White"]
+trainp<-trainp[,sex:=ifelse(sex=="Male", "M", "F")]
+gg2<-ggplot(data=trainp, aes(x=sex, fill = as.factor(dropout)))+  geom_bar() + facet_grid (~race)+ theme(legend.position = "none") #+geom_bar(aes(fill=dropout), position="stack")                       
+plot_grid(gg1, gg2, rel_widths = c(3.5,1))
+train[,race:=ifelse(race=="Nat. Am.","Native American", race)]
 train$sex<-as.factor(train$sex)
 train$race<-as.factor(train$race)
-```
-
-```{r datavis, echo=FALSE, out.width=".75\\linewidth", fig.show="hold"}
-ggplot(data=train[race!="White"], aes(x=sex, fill = as.factor(dropout)))+  geom_bar() + facet_grid (~race) #+geom_bar(aes(fill=dropout), position="stack")
 
 ```
 
-```{r white, echo=FALSE, out.width=".2\\linewidth", fig.show="hold"}
-ggplot(data=train[race=="White"], aes(x=sex, fill = as.factor(dropout)))+  geom_bar() + facet_grid (~race) #+geom_bar(aes(fill=dropout), position="stack")                                            
+Viewing the above visualization, we see that we are treating gender as a factor, for which we will assume only two levels. Race is a factor which we will treat as having six levels: white, asian, black, hispanic, native american, and other minorities. Note that the other minority group also contains the category international, which was included in the midfield dataset but regrouped to other minorities for this analysis. It is also worth considering the wide variety in sample size between the different categories, with white having an overwhelming majority and Native American having only barely enough to be considered as an individual category.   
 
-```
-
+Considering this visualization relative to our subject, we see that females and several minority groups appear to be overall underrepresented in this data. Females also appear to generally have higher numbers of dropouts relative to population size for most races.
 
 ##Assumption Testing
-Logistic regression requires five assumptions to be satisfied: appropriate outcome structure, independence of observations, absence of multicollinearity, linearity of independent vars and log odds, and sufficiently large sample size. \cite{glmassumptions} The first and last of these are clearly met as we designed the dependent variable to be binary and the size of the sample considered is over 8,000 students.\footnote{The full Midfield dataset contains over 97,000 students. The smaller number used in the analysis is a result of filtering the students to STEM students who were identified as having taken an introductory calculus course.} The fourth is also trivially met as we are using all categorical variables. The remaining two assumptions, however, do need some consideration.
+Logistic regression requires five assumptions to be satisfied: appropriate outcome structure, independence of observations, absence of multicollinearity, linearity of independent vars and log odds, and sufficiently large sample size. \cite{glmassumptions} The first and last of these are clearly met as we designed the dependent variable to be binary and the size of the sample considered is over 8,000 students.\footnote{The full Midfield dataset contains over 97,000 students. The smaller number used in the analysis is a result of filtering the students to STEM students who were identified as having taken an introductory calculus course.} 
+
+NEED TO DO FOURTH ASSUMPTION...maybe
+
 
 ```{r start_glm, echo=FALSE, include=FALSE}
 Gender <- factor(train$sex, levels=c('Male', 'Female'))
@@ -181,7 +199,6 @@ glm_model<-glm(dropout~Gender+Race,family=binomial, data=train)
 car::vif(glm_model)
 ```
 To consider multicollinearity, we can use the variance inflation factor (vif). The calculated values for vif were 1.009 for each predictor, which is less than 4, the commonly used indicator of collinearity problems. Therefore, we may proceed under the assumption that this assumption holds.
-
 
 
 The last assumption, and most tricky to consider, is the independence of observations. While each student's measurements are taken individually without regard to any other student in the study, our data does not give any way for us to know that students, particularly in the same institution at the same time period, interact with or influence each other in a meaningful way. However, it is reasonable to assume that if these influences exist, they would be negligible, particularly considering that we are considering students' choices in educational field which would rarely be impacted by infuences from the choices of the other student.
@@ -202,12 +219,28 @@ knitr::kable(
     font_size = 12, latex_options = "HOLD_position")
 ```
 
+```{r odds_ratios, echo=FALSE, warning=FALSE, out.width=".49\\linewidth", fig.show="hold"}
+oddsrat<-exp(parameters::model_parameters(glm_model)[2])
+dat<-data.frame(Parameter=c("NA","Female", "Asian", "Black", "Hispanic", "Native American", "Other Minorities"), Odds_Ratio=oddsrat)[-1,]
+setnames(dat, "Coefficient", "Odds Ratio")
+knitr::kable(
+  dat,
+  digits = 3,
+  caption = "Odds Ratios Relative to white men",
+  align = c('l',rep('c',4))
+) %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "condensed"),
+    font_size = 12, latex_options = "HOLD_position")
+```
 
 
 We see that the only significant predictors are gender, the native american race, and other minority races, all three of which positively influence the dropout rate. This tells us that our data suggests that gender does influence the impact of introductory calculus as a weed out course. Race, however, only affects the dropout rate after calculus 1 for students of Native American heritage and those from races that did not fall into any of the given categories. We can also view the predicted probability of dropping out by race and gender in the below table.
 
+FIX THIS LATER
 
 ```{r pred, echo=FALSE, out.width=".49\\linewidth", fig.show="hold"}
+
 test<-data.table(Race = c("White", "Asian", "Black", "Hispanic",  "Native American", "Other", "White", "Asian", "Black", "Hispanic",  "Native American", "Other"), Gender=c("Male","Male","Male","Male","Male","Male","Female","Female","Female","Female","Female","Female"))
 test$Prediction<-predict(glm_model,newdata = test,type="response")
 knitr::kable(
@@ -220,6 +253,25 @@ knitr::kable(
     bootstrap_options = c("striped", "condensed"),
     font_size = 12, latex_options = "HOLD_position")
 ```
+
+We should also consider the effect size of the model. The below table gives the values for McFadden's, Coxsnell's, and Nagelkerke's pseudo-R$^2$ statistics. 
+
+```{r eff sizes, echo=FALSE, include=FALSE}
+rpt<- rcompanion::nagelkerke(glm_model)
+rpt
+```
+
+```{r efntable, echo=FALSE}
+effsize<-data.frame(McFadden=c(.003), CoxSnell = c(.003), Nagelkerke = c(.005))
+
+# Table for Effect Sizes
+knitr::kable(effsize, caption = "Effect Sizes for the Effects of Race and Gender on Dropout Rate") %>%
+kableExtra::kable_styling(
+bootstrap_options = c("striped", "condensed"),
+font_size = 12, latex_options = "HOLD_position")
+
+```
+McFadden's and Coxsnell's statistics suggest that the model explains .3% of the variation while Nagelkerke's suggests that the model explains .5% of the variation. While this may seem like a very small amount, keep in mind that we are attempting to predict dropout rates based solely on race and gender. We would not expect, and certainly not hope, that these factors would explain a large amount of variation in dropout rates. It is also worth noting that using a likelihood ratio test and chi$^2$ statistic, we get a p value of less than .0001, which implies that our model should still be considered significant relative to the null model.
 
 \newpage
 
