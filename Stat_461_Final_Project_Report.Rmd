@@ -165,7 +165,8 @@ trainp<-train[,race:=ifelse(race=="Native American", "Nat. Am.", race)]
 trainp<-trainp[race!="White"]
 trainp<-trainp[,sex:=ifelse(sex=="Male", "M", "F")]
 trainp<-trainp[,dropout:=ifelse(dropout==1, "Yes", "No")]
-gg1<-ggplot(data=trainp, aes(x=sex, fill = as.factor(dropout)))+  geom_bar() + facet_grid (~race)+ theme(legend.position="top")+ labs(fill="Dropout") #+geom_bar(aes(fill=dropout), position="stack")
+gg1<-ggplot(data=trainp, aes(x=sex, fill = as.factor(dropout)))+  geom_bar() + facet_grid (~race)+ theme(legend.position="top")
++ labs(fill="Dropout") #+geom_bar(aes(fill=dropout), position="stack")
 
 ```
 
@@ -207,7 +208,7 @@ Therefore, we decide that all of our assumptions have been sufficiently met, so 
 
 ##Developing the Model
 In developing the logistic regression model, we will use a baseline of a white male. The resulting model is shown in the below table.
-```{r glm_table, echo=FALSE, warning=FALSE, out.width=".49\\linewidth", fig.show="hold"}
+```{r glm_table, echo=FALSE, warning=FALSE, out.width=".49\\linewidth", fig.show="hold", include=FALSE}
 knitr::kable(
   parameters::model_parameters(glm_model)[,c(1,2,3,6,8)],
   digits = 3,
@@ -221,8 +222,10 @@ knitr::kable(
 
 ```{r odds_ratios, echo=FALSE, warning=FALSE, out.width=".49\\linewidth", fig.show="hold"}
 oddsrat<-exp(parameters::model_parameters(glm_model)[2])
-dat<-data.frame(Parameter=c("NA","Female", "Asian", "Black", "Hispanic", "Native American", "Other Minorities"), Odds_Ratio=oddsrat)[-1,]
-setnames(dat, "Coefficient", "Odds Ratio")
+p<-parameters::model_parameters(glm_model)["p"]
+dat<-data.frame(Odds_Ratio=oddsrat, p=p)[-1,]
+rownames(dat)<-c("Female", "Asian", "Black", "Hispanic", "Native American", "Other Minorities")
+setnames(dat, c("Coefficient", "p"), c("Odds Ratio", "P-value"))
 knitr::kable(
   dat,
   digits = 3,
@@ -235,24 +238,34 @@ knitr::kable(
 ```
 
 
-We see that the only significant predictors are gender, the native american race, and other minority races, all three of which positively influence the dropout rate. This tells us that our data suggests that gender does influence the impact of introductory calculus as a weed out course. Race, however, only affects the dropout rate after calculus 1 for students of Native American heritage and those from races that did not fall into any of the given categories. We can also view the predicted probability of dropping out by race and gender in the below table.
+Based on our test and the p values it produced, the only significant terms are gender, the native american race, and other minority races. The p value for the impact of race rounds to 0 in the table, implying that assuming the null hypothesis we would expect to see results at least as extreme as we did nearly none of the time. Similarly, for the Native American group, we would expect to see results this extreme only .2% of the time and for the other minority groups we would expect to see a value this extreme only 4.9% of the time. Their odds ratios, which are set using the white man as a baseline, then tell us how much more likely these students are to drop out. For example, a female is predicted to be 1.217 times more likely to drop out than a man and Native Americans are predicted to be over twice as likely to drop out after introductory calculus than white people. This tells us that our data suggests that gender does influence the impact of introductory calculus as a weed out course with significance. Race, however, only statistically significantly affects the dropout rate after calculus 1 for students of Native American heritage and those from races that did not fall into any of the given categories. We should point out, however, that the Native American group was the smallest group, containing only approximately 60 total students, so the result should be taken with caution. Similarly the group of Other Minorities, most likely contains a rather diverse group of students and therefore is difficult to interpret entirely on its own.
 
-FIX THIS LATER
+We can also view the predicted probability of dropping out by race and gender in the below table.
+
 
 ```{r pred, echo=FALSE, out.width=".49\\linewidth", fig.show="hold"}
 
 test<-data.table(Race = c("White", "Asian", "Black", "Hispanic",  "Native American", "Other", "White", "Asian", "Black", "Hispanic",  "Native American", "Other"), Gender=c("Male","Male","Male","Male","Male","Male","Female","Female","Female","Female","Female","Female"))
 test$Prediction<-predict(glm_model,newdata = test,type="response")
+preds<-data.frame(Sex = c("Male", "Female"), 
+                  White = c(test$Prediction[1], test$Prediction[7]), 
+                  Asian = c(test$Prediction[2], test$Prediction[8]),
+                  Black = c(test$Prediction[3], test$Prediction[9]),
+                  Hispanic = c(test$Prediction[4], test$Prediction[10]),
+                  Nat = c(test$Prediction[5], test$Prediction[11]),
+                  Other = c(test$Prediction[6], test$Prediction[12]))
+setnames(preds, c("Nat", "Other", "Sex"), c("Native Americans", "Other Minorities", " "))
 knitr::kable(
-  test,
+  preds,
   digits = 3,
   caption = "Prediction of Drop Out Probability by Race and Gender",
-  align = c('l',rep('c',4))
+  align = c('l',rep('c',6))
 ) %>%
   kableExtra::kable_styling(
     bootstrap_options = c("striped", "condensed"),
     font_size = 12, latex_options = "HOLD_position")
 ```
+These predictions show a similar story where the females are all more likely to drop out than the men and Native Americans and Other Minorities have the largest predicted dropout rates. 
 
 We should also consider the effect size of the model. The below table gives the values for McFadden's, Coxsnell's, and Nagelkerke's pseudo-R$^2$ statistics. 
 
@@ -271,7 +284,16 @@ bootstrap_options = c("striped", "condensed"),
 font_size = 12, latex_options = "HOLD_position")
 
 ```
-McFadden's and Coxsnell's statistics suggest that the model explains .3% of the variation while Nagelkerke's suggests that the model explains .5% of the variation. While this may seem like a very small amount, keep in mind that we are attempting to predict dropout rates based solely on race and gender. We would not expect, and certainly not hope, that these factors would explain a large amount of variation in dropout rates. It is also worth noting that using a likelihood ratio test and chi$^2$ statistic, we get a p value of less than .0001, which implies that our model should still be considered significant relative to the null model.
+
+McFadden's and Coxsnell's statistics suggest that the model explains .3% of the variation while Nagelkerke's suggests that the model explains .5% of the variation. While this may seem like a very small amount, keep in mind that we are attempting to predict dropout rates based solely on race and gender. We would not expect, and certainly not hope, that these factors would explain a large amount of variation in dropout rates nor was that the intended purpose of our analysis. It is also worth noting that using a likelihood ratio test and chi$^2$ statistic, we get a p value of less than .0001, which implies that our model should still be considered statistically significant relative to the null model.
+
+
+#Discussion and Further Study
+From the Midfield data, we have explored two aspects of minority participation in the STEM field. The first area we explored was whether there has been a growth of the proportion of women graduating with STEM degrees. WRITE STUFF ABOUT JUST FIRST ANALYSIS HERE
+
+The second area we explored was how the probability of dropping out of the STEM field after taking an introductory calculus course varied among different races and genders. In this case, we found that females were more likely to drop out after introductory calculus than males, and some minority groups also had a significantly higher probability of dropping out. 
+
+These analyses combine to suggest that these aspects of women and minorities in STEM should be further studied and indicates continuing underlying biases against them. That being said, both parts of this analysis did suffer from some issues that arose from incomplete data, and it should be kept in mind that even the most recent data in the Midfield study only includes up to 2017. We also acknowledge that the original intent of the Midfield study was to target engineering, which could have impacted our results. We would suggest that more study on these matters would be useful, especially to consider more recent data that targets all of STEM instead of primarily targetting engineering. We would also suggest further study into the patterns we found, in particular to explore what factors may be impeding the movement to get women more involved in the STEM field and the causation behind the more adverse effect that calculus has on women in comparision to men as well as on only select minority groups.  
 
 \newpage
 
