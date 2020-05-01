@@ -122,7 +122,9 @@ df2$p <- as.factor(df2$p)
 
 #Prepping Time Periods
 
-TimePeriod <- c(rep("1989 - 1993", 31), rep("1994 - 1998", 50), rep("1999 - 2003", 50), rep("2004 - 2008", 14), rep("2009 - 2016", 18))
+TimePeriod <- c(rep("1989 - 1993", 31), rep("1994 - 1998", 50), 
+                rep("1999 - 2003", 50), rep("2004 - 2008", 14), 
+                rep("2009 - 2016", 18))
 PropWomen <- df[,3]
 df3 <- data.frame(TimePeriod, PropWomen)
 df3
@@ -130,10 +132,17 @@ df3
 
 
 ```{r strip, echo=FALSE, out.width=".49\\linewidth", fig.cap="Stripchart and Boxplot of Proportion of Women over Time", fig.show = 'hold'}
-stripchart(p~tp, vertical = TRUE, pch = 20, ylab = "Proportion of Women", xlab = "School Year", main = "Stripchart of Women in STEM")
+stripchart(p~tp, vertical = TRUE, 
+           pch = 20, ylab = "Proportion of Women", 
+           xlab = "School Year", 
+           main = "Stripchart of Women in STEM")
 
 #FILL IN REAL BOXPLOT CODE HERE!!!
-plot(p~tp, pch = 20, ylab = "Proportion of Women", xlab = "School Year", main = "Boxplot of Women in STEM")
+plot(p~tp, 
+     pch = 20, 
+     ylab = "Proportion of Women", 
+     xlab = "School Year", 
+     main = "Boxplot of Women in STEM")
 
 ```
 
@@ -152,29 +161,39 @@ To consider this problem, we use the Midfield data to identify STEM students who
 ##Exploratory Analysis
 We begin by visualizaing the collected dropout data.
 ```{r dinput, echo=FALSE, include=FALSE}
+#Load data for logistic regression analysis
 train<-fread("master_glm.csv")
 train<-train[race!="Unknown" & sex!="Unknown"]
 train<-train[,race:=ifelse(race=="International", "Other", race)]
-#train<-train[,race:=ifelse(race=="International"|race=="Native American", "Other", race)]
-#train$sex<-as.factor(train$sex)
-#train$race<-as.factor(train$race)
+
 ```
 
 ```{r datavis, echo=FALSE, include=FALSE}
+# Create prep data for EDA plot
 trainp<-train[,race:=ifelse(race=="Native American", "Nat. Am.", race)]
 trainp<-trainp[race!="White"]
 trainp<-trainp[,sex:=ifelse(sex=="Male", "M", "F")]
 trainp<-trainp[,dropout:=ifelse(dropout==1, "Yes", "No")]
-gg1<-ggplot(data=trainp, aes(x=sex, fill = as.factor(dropout)))+  geom_bar() + facet_grid (~race)+ theme(legend.position="top")
-+ labs(fill="Dropout") #+geom_bar(aes(fill=dropout), position="stack")
 
-```
+# Component of plot for minority groups
+gg1<-ggplot(data=trainp, aes(x=sex, fill = as.factor(dropout))) +  
+  geom_bar() + 
+  facet_grid (~race) + 
+  theme(legend.position="top") + 
+  labs(fill="Dropout") 
 
-```{r white, echo=FALSE, fig.show="hold", fig.cap="Visualization of dropout data by race and gender. The white group has by far the most students and is therefore set apart from the minority races.", fig.width = 6, fig.height = 4}
+# Component of plot for white group
 trainp<-train[race=="White"]
 trainp<-trainp[,sex:=ifelse(sex=="Male", "M", "F")]
-gg2<-ggplot(data=trainp, aes(x=sex, fill = as.factor(dropout)))+  geom_bar() + facet_grid (~race)+ theme(legend.position = "none") #+geom_bar(aes(fill=dropout), position="stack")                       
+gg2<-ggplot(data=trainp, aes(x=sex, fill = as.factor(dropout))) +
+  geom_bar() + 
+  facet_grid (~race) + 
+  theme(legend.position = "none") 
+
+# Combine plots
 plot_grid(gg1, gg2, rel_widths = c(3.5,1))
+
+# Correct training data to be ready for the rest of the analysis
 train[,race:=ifelse(race=="Nat. Am.","Native American", race)]
 train$sex<-as.factor(train$sex)
 train$race<-as.factor(train$race)
@@ -192,12 +211,16 @@ NEED TO DO FOURTH ASSUMPTION...maybe
 
 
 ```{r start_glm, echo=FALSE, include=FALSE}
+# Set order for race and gender so that white men will be the baseline
 Gender <- factor(train$sex, levels=c('Male', 'Female'))
-Race<-factor(train$race, levels=c("White", "Asian", "Black", "Hispanic", "International", "Native American", "Other"))
-glm_model<-glm(dropout~Gender+Race,family=binomial, data=train)
+Race<-factor(train$race, 
+             levels = c("White", "Asian", "Black", "Hispanic",
+                        "International", "Native American", "Other"))
+glm_model<-glm(dropout ~ Gender + Race, family = binomial, data = train)
 
-#No Multicollinearity
+# Check Multicollinearity
 car::vif(glm_model)
+
 ```
 To consider multicollinearity, we can use the variance inflation factor (vif). The calculated values for vif were 1.009 for each predictor, which is less than 4, the commonly used indicator of collinearity problems. Therefore, we may proceed under the assumption that this assumption holds.
 
@@ -208,24 +231,17 @@ Therefore, we decide that all of our assumptions have been sufficiently met, so 
 
 ##Developing the Model
 In developing the logistic regression model, we will use a baseline of a white male. The resulting model is shown in the below table.
-```{r glm_table, echo=FALSE, warning=FALSE, out.width=".49\\linewidth", fig.show="hold", include=FALSE}
-knitr::kable(
-  parameters::model_parameters(glm_model)[,c(1,2,3,6,8)],
-  digits = 3,
-  caption = "Results of the logistic regression model",
-  align = c('l',rep('c',4))
-) %>%
-  kableExtra::kable_styling(
-    bootstrap_options = c("striped", "condensed"),
-    font_size = 12, latex_options = "HOLD_position")
-```
+
 
 ```{r odds_ratios, echo=FALSE, warning=FALSE, out.width=".49\\linewidth", fig.show="hold"}
-oddsrat<-exp(parameters::model_parameters(glm_model)[2])
-p<-parameters::model_parameters(glm_model)["p"]
-dat<-data.frame(Odds_Ratio=oddsrat, p=p)[-1,]
+# Calculate Odds Ratios
+oddsrat <- exp(parameters::model_parameters(glm_model)[2])
+p <- parameters::model_parameters(glm_model)["p"]
+dat <- data.frame(Odds_Ratio=oddsrat, p=p)[-1,]
 rownames(dat)<-c("Female", "Asian", "Black", "Hispanic", "Native American", "Other Minorities")
 setnames(dat, c("Coefficient", "p"), c("Odds Ratio", "P-value"))
+
+# Table for Odds Ratios
 knitr::kable(
   dat,
   digits = 3,
@@ -235,6 +251,7 @@ knitr::kable(
   kableExtra::kable_styling(
     bootstrap_options = c("striped", "condensed"),
     font_size = 12, latex_options = "HOLD_position")
+
 ```
 
 
@@ -244,8 +261,11 @@ We can also view the predicted probability of dropping out by race and gender in
 
 
 ```{r pred, echo=FALSE, out.width=".49\\linewidth", fig.show="hold"}
-
-test<-data.table(Race = c("White", "Asian", "Black", "Hispanic",  "Native American", "Other", "White", "Asian", "Black", "Hispanic",  "Native American", "Other"), Gender=c("Male","Male","Male","Male","Male","Male","Female","Female","Female","Female","Female","Female"))
+# Get predictions for each combination of race and gender
+test<-data.table(Race = c("White", "Asian", "Black", "Hispanic", "Native American", "Other",
+                          "White", "Asian", "Black", "Hispanic",  "Native American", "Other"),
+                 Gender=c("Male","Male","Male","Male","Male","Male",
+                          "Female","Female","Female","Female","Female","Female"))
 test$Prediction<-predict(glm_model,newdata = test,type="response")
 preds<-data.frame(Sex = c("Male", "Female"), 
                   White = c(test$Prediction[1], test$Prediction[7]), 
@@ -255,6 +275,8 @@ preds<-data.frame(Sex = c("Male", "Female"),
                   Nat = c(test$Prediction[5], test$Prediction[11]),
                   Other = c(test$Prediction[6], test$Prediction[12]))
 setnames(preds, c("Nat", "Other", "Sex"), c("Native Americans", "Other Minorities", " "))
+
+#Make table of predictions
 knitr::kable(
   preds,
   digits = 3,
@@ -270,6 +292,7 @@ These predictions show a similar story where the females are all more likely to 
 We should also consider the effect size of the model. The below table gives the values for McFadden's, Coxsnell's, and Nagelkerke's pseudo-R$^2$ statistics. 
 
 ```{r eff sizes, echo=FALSE, include=FALSE}
+# Calculate effect sizes
 rpt<- rcompanion::nagelkerke(glm_model)
 rpt
 ```
@@ -278,10 +301,10 @@ rpt
 effsize<-data.frame(McFadden=c(.003), CoxSnell = c(.003), Nagelkerke = c(.005))
 
 # Table for Effect Sizes
-knitr::kable(effsize, caption = "Effect Sizes for the Effects of Race and Gender on Dropout Rate") %>%
-kableExtra::kable_styling(
-bootstrap_options = c("striped", "condensed"),
-font_size = 12, latex_options = "HOLD_position")
+knitr::kable(effsize, 
+             caption = "Effect Sizes for the Effects of Race and Gender on Dropout Rate") %>%
+  kableExtra::kable_styling(bootstrap_options = c("striped", "condensed"),
+                            font_size = 12, latex_options = "HOLD_position")
 
 ```
 
@@ -326,10 +349,23 @@ https://advances.asee.org/wp-content/uploads/vol05/issue02/Papers/AEE-18-Ohland.
   The data released by the Midfield project was originally separated into four data tables, whose names and descriptions as well as the pertinent data to this analysis pulled from them can be found in the table below. 
 
 ```{r midtables, echo=FALSE, fig.width=6}
-midtables<-data.frame(Table = c("midfieldterms", "midfieldcourses", "midfieldstudents", "midfielddegrees"), Purpose = c("Shows the students' status by term", "Shows each instance of a student taking a class", "Shows personal information about each student", "Shows the end degree, or lack thereof, earned by each student"), UsefulData = c("Program of study by term", "Semester in which Calculus 1 was taken", "Race and Gender of each student", "Students that earned STEM degrees"))
+# Create data for table on midfield data explanation
+midtab<-data.frame(Table = c("midfieldterms",
+                             "midfieldcourses", 
+                             "midfieldstudents", 
+                             "midfielddegrees"), 
+                   Purpose = c("Shows the students' status by term",
+                               "Shows each instance of a student taking a class",
+                               "Shows personal information about each student",
+                               "Shows the end degree, or lack thereof, earned by each student"),
+                   UsefulData = c("Program of study by term",
+                                  "Semester in which Calculus 1 was taken",
+                                  "Race and Gender of each student", 
+                                  "Students that earned STEM degrees"))
 
+# Create table for midfield data explanation
 knitr::kable(
-  midtables,
+  midtab,
   digits = 3,
   align = c('l',rep('c',2)), caption = "Midfield Data Tables"
 ) %>%
