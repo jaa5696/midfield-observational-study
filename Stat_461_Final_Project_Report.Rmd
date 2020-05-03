@@ -31,9 +31,7 @@ and much more. By using the MIDFIELD database to identify patterns and trends as
 evidence for statistical research questions, we gain a better understanding of student 
 performances in school and encourage other researchers to conduct studies using the database.
 MIDFIELD continues to work towards improving data validation methods as well as expanding 
-the number of institutions included in the database. In our case, we will be working with a 
-selection of the MIDFIELD data set compiled by Purdue University researchers on 97,640 students
-from 10 institutions during the years 1994 to 2003. 
+the number of institutions included in the database. \cite{intro}
 
 ##Statistical Research Question
 In this observational study, we are interested in looking at how the proportion of women in STEM has 
@@ -526,7 +524,7 @@ Psychology of Mathematics Education} (pp. 457-464). Chicago, IL: University of I
 Schreiber-Gregory, D. (2018). PDF.
 
 \bibitem{intro}
-https://advances.asee.org/wp-content/uploads/vol05/issue02/Papers/AEE-18-Ohland.pdf
+Ohland, Matthew W., and Russell A. Long. The Multiple-Institution Database for Investigating Engineering Longitudinal Development: an Experiential Case Study of Data Sharing and Reuse. Advances in Engineering Education, 2016, advances.asee.org/wp-content/uploads/vol05/issue02/Papers/AEE-18-Ohland.pdf.
 
 \end{thebibliography}
 
