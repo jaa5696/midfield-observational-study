@@ -187,11 +187,24 @@ some of the years with outlier cases.
 
 ##ANOVA Assumption Testing
 
-In order to properly make use of our One Way Repeated Measures (Within-Subjects) ANOVA Model, we must first check that our data passes the proper assumption for such a model. These assumptions are the normality of our residuals as well as our random effects, homoscedasticity of our residuals, as well as a lack of interaction between on subjects and treatments. Upon checking the assumptions of our original data, we noticed many issues regarding the normality and homoscedasticity within the data, and decided to use a log-transformation of our response variable in order to adjust to our model \footnote{An inclusion of the assumption visualizations for the original data along with a detailed explanation has been included within Appendix B}.  
+In order to properly make use of our One Way Repeated Measures (Within-Subjects) ANOVA Model, we must first check that our data passes the proper assumption for such a model. These assumptions are the normality of our residuals as well as our random effects, homoscedasticity of our residuals, as well as a lack of interaction between our subjects. Since we are also expecting a lack of independence between our observations, we will be using Mauchly's test of Sphericity to compensate for such violations. Upon checking the assumptions of our original data, we noticed many issues regarding the normality and homoscedasticity within the data, and decided to use a log-transformation of our response variable in order to adjust to our model \footnote{An inclusion of the assumption visualizations for the original data along with a detailed explanation has been included within Appendix B}.  
 
 ```{r logWSANOVAModel, echo=FALSE, include=FALSE}
 df2$logp <- log(df2$p)
 midfieldLogM1 <- lme4::lmer(logp ~ tp + (1| inst), data = df2)
+```
+
+
+```{r multiV, echo=FALSE}
+df2Wide <- tidyr::pivot_wider(df2,id_cols = inst, names_from = tp, values_from = logp)
+responseWide <- as.matrix(df2Wide[ , 2:11])
+midfieldMV <- lm(responseWide ~ 1)
+Term_Year <- factor(levels(df2$tp))
+
+### Create the table object
+outputMV <- car::Anova(midfieldMV, idata = data.frame(Term_Year),
+                   idesign = ~Term_Year, type = "III")
+midfieldMultivariate <- summary(outputMV, multivariate=FALSE)
 ```
 
 ###Normality of Residuals and Random Effects
@@ -241,31 +254,45 @@ ggplot2::ggplot(data = df2,
   theme_bw() +
   xlab("Term Year") +
   ylab("Log-Transformed Proportion of Woman Graduating (STEM)") +
-  labs(color = "Institution")
+  labs(color = "Institution") +
+  theme(legend.position="top")
+
 ```
 
-##Multivariate Omnibus Results
+In order to use our ANOVA model, we must check for a lack of interaction between our subjects. Using the plots above, we are given the individual plots for the log-proportion of women graduating in STEM by term year. Within the plot, we see potential interactions present such as between the years 1995 and 1996 for institution's A and G. However there appear to be few visual cues of interactions present, so we will proceed with caution and assume that there is no interaction present.
 
-```{r multiV, echo=FALSE}
-df2Wide <- tidyr::pivot_wider(df2,id_cols = inst, names_from = tp, values_from = logp)
-responseWide <- as.matrix(df2Wide[ , 2:11])
-midfieldMV <- lm(responseWide ~ 1)
-Term_Year <- factor(levels(df2$tp))
-
-### Create the table object
-outputMV <- car::Anova(midfieldMV, idata = data.frame(Term_Year),
-                   idesign = ~Term_Year, type = "III")
-midfieldMultivariate <- summary(outputMV, multivariate=FALSE)
-```
-
-```{r univariate Results, echo=FALSE}
+###Sphericity
+```{r Sphericity, echo=FALSE}
 options(knitr.kable.NA= "")
 knitr::kable(
-  data.frame(unclass(midfieldMultivariate$univariate.tests)),
+  data.frame(unclass(midfieldMultivariate$sphericity.tests)),
   digits = 3,
-  col.names = c("Term SS", "Numerator DF", "Error SS", "Denominator DF", "F Ratio", "p-value"),
-  caption = "ANOVA Table Within-Subjects: Log-Proportion of Women Graduating in STEM",
-  align = c('l',rep('c',6))
+  col.names = c("Test Statistic", "p-value"),
+  caption = "Mauchly's Test for Sphericity",
+  align = c('c',rep('c',2))
+) %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "condensed"),
+    font_size = 12, latex_options = "HOLD_position") %>%
+kableExtra::footnote(
+    general = "Computer rounding has made test statistic appear to be zero.",
+    footnote_as_chunk = T)
+
+```
+
+Lastly, we will be using the results from Mauchly's test of Sphericity in order to determine if our repeated measures are compoundly symmetrical.  Upon analysis of this test, we see that we acheived a p-value of 0.019.  Comparing our p-value to our Type I Error Rate of 0.1, we determine that our p-value is much less than our error rate. THus, we will decide that our data violates the assumption of sphericity. We will proceed with our omnibus testing, however we will include adjustments methods to combat our violation of sphericity.
+
+##Omnibus Results
+
+```{r univariate Results, echo=FALSE}
+midfieldFrame <- data.frame(unclass(midfieldMultivariate$univariate.tests))
+midfieldFrame <- midfieldFrame[,c(2,4,1,3,5,6)]
+knitr::kable(
+  midfieldFrame,
+  digits = 3,
+  col.names = c("Numerator DF", "Denominator DF", "Term SS", "Error SS", "F Ratio", "p-value"),
+  caption = "ANOVA Table Within-Subjects: Log of Proportion of Women Graduating in STEM",
+  align = c('c',rep('c',6))
 ) %>%
   kableExtra::kable_styling(
     bootstrap_options = c("striped", "condensed"),
@@ -275,29 +302,13 @@ knitr::kable(
     footnote_as_chunk = T)
 ```
 
-```{r Sphericity, echo=FALSE}
-options(knitr.kable.NA= "")
-knitr::kable(
-  data.frame(unclass(midfieldMultivariate$sphericity.tests)),
-  digits = 3,
-  col.names = c("Test Statistic", "p-value"),
-  caption = "Mauchly Test for Sphericity",
-  align = c('l',rep('c',2))
-) %>%
-  kableExtra::kable_styling(
-    bootstrap_options = c("striped", "condensed"),
-    font_size = 12, latex_options = "HOLD_position") %>%
-kableExtra::footnote(
-    general = "Computer rounding has made test statistic appear to be zero.",
-    footnote_as_chunk = T)
-
-options(knitr.kable.NA= "")
+```{r sphericityAdjustments, echo=FALSE}
 knitr::kable(
   data.frame(unclass(midfieldMultivariate$pval.adjustments)),
   digits = 3,
   col.names = c("Greenhouse-Geiser", "p-value", "Huynh-Feldt", "p-value"),
   caption = "Adjustments for Sphericity Violations",
-  align = c('l',rep('c',4))
+  align = c('c',rep('c',4))
 ) %>%
   kableExtra::kable_styling(
     bootstrap_options = c("striped", "condensed"),
@@ -349,7 +360,6 @@ gg2<-ggplot(data=trainp, aes(x=sex, fill = as.factor(dropout))) +
 # Combine plots
 plot_grid(gg1, gg2, rel_widths = c(3.5,1))
 ```
-
 
 
 We begin by visualizaing the collected dropout data as seen in Figure \ref{fig:comboplots)} We see that we are treating gender as a factor, for which we will assume only two levels. Race is also a factor, which we will treat as having six levels: White, Asian, Black, Hispanic, Native American, and Other Minorities. Note that the other minority group also contains the category international, which was included in the MIDFIELD dataset but regrouped to other minorities for this analysis. It is also worth considering the wide variety in sample size between the different categories, with White having an overwhelming majority and Native American having only barely enough to be considered as an individual category.   
