@@ -17,6 +17,8 @@ library(hasseDiagram)
 library(kableExtra)
 library(cowplot)
 library(wesanderson)
+library(magrittr)
+library(psych)
 ```
 
 #Introduction
@@ -115,6 +117,7 @@ between the years. ANOVA analysis will provide greater insight into these detail
 
 ```{r dataprep, echo=FALSE, include=FALSE}
 m_f<-read.csv("master_anova.csv")
+m_f$term_degree<-as.factor(m_f$term_degree)
 tpx <- m_f[,1]
 tpx
 instx <- m_f[,2]
@@ -134,7 +137,7 @@ p <- df[,3]
 df2 <- data.frame(tp,p)
 df2$tp <- as.factor(df2$tp)
 df2$p <- as.factor(df2$p)
-
+```
 
 ```{r strip, echo=FALSE, out.width=".49\\linewidth", fig.cap="Stripchart and Boxplot of Proportion of Women over Time", fig.show = 'hold'}
 stripchart(p~tp, vertical = TRUE, 
@@ -150,7 +153,7 @@ boxplot(p~tp,
         "Proportion of Women", 
         xlab = "School Year", 
         main = "Boxplot of Women in STEM")
-
+```
 
 Table 1 gives the values of various descriptive statistics for the proportion of women pursuing STEM 
 degrees by time periods. From the table, we can observe that the sample arithmetic means range from 
@@ -159,16 +162,11 @@ proportion of women in STEM is 1998 and the year with the highest proportion is 
 arithmetic variance is also very small across all the years. The sample skewness values vary across 
 the years which indicate that there may exist some outlier cases. The graphs shown above outline 
 some of the years with outlier cases. 
-
-install.packages("magrittr")
-install.packages("dplyr")
-library(magittr)
-library(dplyr)
-
-getStats <- function(df2)
+```{r kabtab, echo=FALSE}
+#getStats <- function(df2)
 
 A <- psych::describeBy(
-  x = df2$p, group = df2$tp, 
+  x = as.numeric(df2$p), group = df2$tp, 
   na.rm = TRUE, interp = TRUE, 
   quant= c(0.25,0.75), skew = TRUE, 
   digits = 3, mat = TRUE)
@@ -186,7 +184,7 @@ B <- data.frame(
 knitr::kable(B, 
              caption = "Statistics for MIDFIELD Data") %>%
 kableExtra::kable_styling(bootstrap_options = c("striped", "condensed"), font_size = 9, latex_options = "HOLD_position")
-
+```
 
 #Exploring the Change in the Proportion of Women Graduates in STEM Majors over Time
 
@@ -283,14 +281,14 @@ car::vif(glm_model)
 
 ```
 
-We see that for the three largest groups females have higher dropout rates than males with other minorities as equal and the last two categories having the reverse trend. Likewise, for most pairs of races, similarities and differences in proportion dropping increase or decrease consistently for males and females with the Hispanic and Native American groups again providing the only mild exceptions, for example comparing either to the Other Minorities category. This implies that there could be some mild issues with the assumption of the independent variables'  linearity with log odds. We will, however, still proceed with the analysis noting that these mild issues primarily occur among the least common groups in the population and that any results of the analysis pertaining to these smaller groups will need to be done cautiously. 
+We see that for the three largest groups females have higher dropout rates than males with other minorities as equal and the last two categories having the reverse trend. Likewise, for most pairs of races, similarities and differences in proportion dropping increase or decrease consistently for males and females with the Hispanic and Native American groups again providing the only mild exceptions, for example comparing either to the Other Minorities category. This implies that there could be some mild issues with the assumption of the independent variables'  linearity with log odds. We will, however, still proceed with the analysis noting that these mild issues primarily occur among the least common groups in the population and that any results of the analysis pertaining to these smaller groups will need to be done cautiously.\footnote{Particularly considering the smaller sample size in the Native American and to a lesser extent Hispanic groups, it may seem reasonable to merge one or both of these groups into the Other Minorities category. A condensed summary of the analysis making both of these choices is shown in Appendix C.} 
 
 To consider multicollinearity, we can use the variance inflation factor (vif). The calculated values for vif were 1.009 for each predictor, which is less than 4, the commonly used indicator of collinearity problems. Therefore, we may proceed under the assumption that this assumption holds.
 
 
 The last assumption, and most tricky to consider, is the independence of observations. While each student's measurements are taken individually without regard to any other student in the study, our data does not give any way for us to know that students, particularly in the same institution at the same time period, interact with or influence each other in a meaningful way. However, it is reasonable to assume that if these influences exist, they would be negligible, particularly considering that we are considering students' choices in educational field which would rarely be impacted by infuences from the choices of the other student.
 
-Therefore, we decide that all of our assumptions have been sufficiently met, so we may proceed with our analysis.
+Therefore, aside from a small linearity issue that we will continue to acknowledge, we decide that all of our assumptions have been sufficiently met, so we may proceed with our analysis.
 
 ##Developing the Model
 In developing the logistic regression model, we will use a baseline of a white male. The resulting model is shown in the below table.
@@ -318,7 +316,7 @@ knitr::kable(
 ```
 
 
-Based on our test and the p values it produced, the only significant terms are gender, the native american race, and other minority races. The p value for the impact of race rounds to 0 in the table, implying that assuming the null hypothesis we would expect to see results at least as extreme as we did nearly none of the time. Similarly, for the Native American group, we would expect to see results this extreme only .2% of the time and for the other minority groups we would expect to see a value this extreme only 4.9% of the time. Their odds ratios, which are set using the white man as a baseline, then tell us how much more likely these students are to drop out. For example, a female is predicted to be 1.217 times more likely to drop out than a man and Native Americans are predicted to be over twice as likely to drop out after introductory calculus than white people. This tells us that our data suggests that gender does influence the impact of introductory calculus as a weed out course with significance. Race, however, only statistically significantly affects the dropout rate after calculus 1 for students of Native American heritage and those from races that did not fall into any of the given categories. We should point out, however, that the Native American group was the smallest group, containing only approximately 60 total students, so the result should be taken with caution. Similarly the group of Other Minorities, most likely contains a rather diverse group of students and therefore is difficult to interpret entirely on its own.
+Based on our test and the p values it produced, the only significant terms are gender, the Native American race, and other minority races. The p value for the impact of race rounds to 0 in the table, implying that assuming the null hypothesis we would expect to see results at least as extreme as we did nearly none of the time. Similarly, for the Native American group, we would expect to see results this extreme only .2% of the time and for the other minority groups we would expect to see a value this extreme only 4.9% of the time. Their odds ratios, which are set using the white man as a baseline, then tell us how much more likely these students are to drop out. For example, a female is predicted to be 1.217 times more likely to drop out than a man and Native Americans are predicted to be over twice as likely to drop out after introductory calculus than white people. This tells us that our data suggests that gender does influence the impact of introductory calculus as a weed out course with significance. Race, however, only statistically significantly affects the dropout rate after calculus 1 for students of Native American heritage and those from races that did not fall into any of the given categories. We should point out, however, that the Native American group was the smallest group, containing only approximately 60 total students, and contained some assumption issues, so the result should be taken with caution. Similarly the group of Other Minorities, most likely contains a rather diverse group of students and therefore is difficult to interpret entirely on its own. Similarly, recall that the groups Hispanic and Native American followed a slightly different pattern in our assumptions check, so we must be cautious on assertions we make about these groups, both in the effects of race and gender. Note, however, that the results remain consistent even when these groups are merged into the Other category, the results of which are shown in Appendix C.
 
 We can also view the predicted probability of dropping out by race and gender in the below table.
 
@@ -455,7 +453,164 @@ knitr::kable(
   Another major considertation to make was how to define when a student drops out of the STEM field in association with Calculus 1. Noting that the data considers each year to contain six semesters, we defined a student to have dropped out of the STEM field in association with Calculus 1 if they do not graduate with a STEM degree and they do not appear in a STEM program in the fourth, fifth, or sixth semesters following the most recent taking of the course. Simply put, we sample the time period between six months and a year after the course and see whether or not the student is still in STEM. The consideration of whether or not the graduate in STEM prevents the accidental elimination of any student that gradutates immediately or shortly after Calculus 1 while the slight delay between the measurement era and the actual taking of the course gives time for the student to choose to drop out or change majors and for this change to be recorded. 
 
 \newpage
-#Appendix B: Code Appendix
+#Appendix C: Modified Logistic Regression Models
+In the assumption testing of our data, we recognized some issues with the linearity of independent variables and log odds, the largest issue considering the Native American group, which was also distinctly the smallest group. It then makes sense to consider what happens when we merge the Native American groups into the Other Minorities category. 
+
+```{r plotprepc, echo=FALSE, include=FALSE}
+train<-fread("master_glm.csv")
+train<-train[,race:=ifelse(race=="International", "Other", race)]
+train<-train[,race:=ifelse(race=="Native American", "Other", race)]
+train$sex<-as.factor(train$sex)
+train$race<-as.factor(train$race)
+train<-train[race!="Unknown" & sex!="Unknown"]
+Gender <- factor(train$sex, levels=c('Male', 'Female'))
+Race<-factor(train$race, levels=c("White", "Asian", "Black", "Hispanic", "Other"))
+
+# Create prep data for EDA plot
+trainp=train
+trainp<-trainp[race!="White"]
+trainp<-trainp[,sex:=ifelse(sex=="Male", "M", "F")]
+trainp<-trainp[,dropout:=ifelse(dropout==1, "Yes", "No")]
+
+trainp2<-train
+trainp2<-trainp2[,drop_rate:=mean(dropout), keyby=c("race", "sex")]
+#trainp2$n<-aggregate(x=c("race", "sex"))
+
+trainp3<-train
+trainp3<-trainp2[,n:=.N, keyby=c("race", "sex")]
+#trainp3$n<-ifelse(train
+trainp3$race<-factor(trainp2$race, levels=c("Asian", "White", "Black", "Hispanic", "Other"))
+```
+
+```{r secondplot2, echo=FALSE, fig.height=2, fig.cap="Dropout rates compared by race and gender"}
+ggplot(aes(x=race, y=sex, color=n), data=trainp3) + 
+  geom_text(aes(label=round(drop_rate, digits=2)), size=6) + 
+  scale_color_gradientn(colours = wes_palette("Darjeeling1", 10, type = "continuous")) +
+  labs(color="Number of Observations") + 
+  theme_bw()+
+  theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+```
+As we could have predicted, the result still has some issues with the Other Minorities and Hispanic categories in that they each have a higher male proportion of female dropouts. The remainder of the analysis remains similar.
+
+```{r correction2, echo=FALSE, include=FALSE}
+train$sex<-as.factor(train$sex)
+train$race<-as.factor(train$race)
+Gender <- factor(train$sex, levels=c('Male', 'Female'))
+Race<-factor(train$race, 
+             levels = c("White", "Asian", "Black", "Hispanic", "Other"))
+glm_model<-glm(dropout ~ Gender + Race, family = binomial, data = train)
+
+# Check Multicollinearity
+car::vif(glm_model)
+
+```
+
+The results are shown in the below table. 
+
+```{r odds_ratios3, echo=FALSE, warning=FALSE, out.width=".49\\linewidth", fig.show="hold"}
+# Calculate Odds Ratios
+oddsrat <- exp(parameters::model_parameters(glm_model)[2])
+p <- parameters::model_parameters(glm_model)["p"]
+dat <- data.frame(Odds_Ratio=oddsrat, p=p)[-1,]
+rownames(dat)<-c("Female", "Asian", "Black", "Hispanic",  "Other Minorities")
+setnames(dat, c("Coefficient", "p"), c("Odds Ratio", "P-value"))
+
+# Table for Odds Ratios
+knitr::kable(
+  dat,
+  digits = 3,
+  caption = "Odds Ratios Relative to white men",
+  align = c('l',rep('c',4))
+) %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "condensed"),
+    font_size = 12, latex_options = "HOLD_position")
+
+```
+Other than the Other Minorities category, which clearly changed in composition, the odds ratios and p values are very similar to the original analysis, which shows us that this decision is not overly influential to our analysis and conclusions.
+
+In an effort to better meet the linearity of independent observations and log odds, we can also merge the Hispanic group into the Other Minorities group. 
+
+
+```{r plotprepc2, echo=FALSE, include=FALSE}
+train<-fread("master_glm.csv")
+train<-train[,race:=ifelse(race=="International", "Other", race)]
+train<-train[,race:=ifelse(race=="Native American", "Other", race)]
+train<-train[,race:=ifelse(race=="Hispanic", "Other", race)]
+train$sex<-as.factor(train$sex)
+train$race<-as.factor(train$race)
+train<-train[race!="Unknown" & sex!="Unknown"]
+Gender <- factor(train$sex, levels=c('Male', 'Female'))
+Race<-factor(train$race, levels=c("White", "Asian", "Black", "Other"))
+
+# Create prep data for EDA plot
+trainp=train
+trainp<-trainp[race!="White"]
+trainp<-trainp[,sex:=ifelse(sex=="Male", "M", "F")]
+trainp<-trainp[,dropout:=ifelse(dropout==1, "Yes", "No")]
+
+trainp2<-train
+trainp2<-trainp2[,drop_rate:=mean(dropout), keyby=c("race", "sex")]
+#trainp2$n<-aggregate(x=c("race", "sex"))
+
+trainp3<-train
+trainp3<-trainp2[,n:=.N, keyby=c("race", "sex")]
+#trainp3$n<-ifelse(train
+trainp3$race<-factor(trainp2$race, levels=c("Asian", "White", "Black", "Other"))
+```
+
+```{r secondplot3, echo=FALSE, fig.height=2, fig.cap="Dropout rates compared by race and gender"}
+ggplot(aes(x=race, y=sex, color=n), data=trainp3) + 
+  geom_text(aes(label=round(drop_rate, digits=2)), size=6) + 
+  scale_color_gradientn(colours = wes_palette("Darjeeling1", 10, type = "continuous")) +
+  labs(color="Number of Observations") + 
+  theme_bw()+
+  theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+```
+Similar to the last case, the result is similar, with now only Other Minorities presenting mild issues to our assumption. The rest of analysis proceeds similarly with the test results shown below.
+
+```{r correction3, echo=FALSE, include=FALSE}
+train$sex<-as.factor(train$sex)
+train$race<-as.factor(train$race)
+Gender <- factor(train$sex, levels=c('Male', 'Female'))
+Race<-factor(train$race, 
+             levels = c("White", "Asian", "Black", "Other"))
+glm_model<-glm(dropout ~ Gender + Race, family = binomial, data = train)
+
+# Check Multicollinearity
+car::vif(glm_model)
+
+```
+
+
+
+```{r odds_ratios2, echo=FALSE, warning=FALSE, out.width=".49\\linewidth", fig.show="hold"}
+# Calculate Odds Ratios
+oddsrat <- exp(parameters::model_parameters(glm_model)[2])
+p <- parameters::model_parameters(glm_model)["p"]
+dat <- data.frame(Odds_Ratio=oddsrat, p=p)[-1,]
+rownames(dat)<-c("Female", "Asian", "Black",  "Other Minorities")
+setnames(dat, c("Coefficient", "p"), c("Odds Ratio", "P-value"))
+
+# Table for Odds Ratios
+knitr::kable(
+  dat,
+  digits = 3,
+  caption = "Odds Ratios Relative to white men",
+  align = c('l',rep('c',4))
+) %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "condensed"),
+    font_size = 12, latex_options = "HOLD_position")
+
+```
+Other than the Other Minorities category, which clearly changed in composition, the odds ratios and p values are still very similar to the original analysis, so the decision is still relatively unimportant. That being said, none of these models entirely meet assumptions, but the last does come relatively close and produces a similar result to our original model.
+
+
+\newpage
+#Appendix D: Code Appendix
 
 ```{r ref.label = knitr::all_labels(), echo = TRUE, eval = FALSE}
 
