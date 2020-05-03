@@ -21,59 +21,65 @@ library(wesanderson)
 
 #Introduction
 ##Background
-The Multiple-Institution Database for Investigating Engineering Longitudinal Development
-(MIDFIELD) is a database that contains population data for 2.2 million undergraduates at 20
-higher education institutions with engineering programs. MIDFIELD contains a substantial
-amount of information about students including their race, gender, high school GPA, degree
-major, and much more. By using the MIDFIELD database to identify patterns and trends as well
-as find evidence for statistical research questions, we gain a better understanding of student
+The Multiple-Institution Database for Investigating Engineering Longitudinal Development 
+(MIDFIELD) is a database that contains population data for 2.2 million undergraduates at 
+20 higher education institutions with engineering programs. MIDFIELD contains a substantial 
+amount of information about students including their race, gender, high school GPA, degree major, 
+and much more. By using the MIDFIELD database to identify patterns and trends as well as find 
+evidence for statistical research questions, we gain a better understanding of student 
 performances in school and encourage other researchers to conduct studies using the database.
-MIDFIELD continues to work towards improving data validation methods as well as expanding
-the number of institutions included in the database. In our case, we will be working with a
-selection of the MIDFIELD data set compiled by Purdue University researchers on 97,640
-students from 12 institutions during the years 1987 to 2016.
+MIDFIELD continues to work towards improving data validation methods as well as expanding 
+the number of institutions included in the database. In our case, we will be working with a 
+selection of the MIDFIELD data set compiled by Purdue University researchers on 97,640 students
+from 10 institutions during the years 1994 to 2003. 
 
 ##Statistical Research Question
-In this experiment, we are interested in looking at how the proportion of women in STEM has
-changed over the year by school. To do this, we will split the time period of 1987 – 2016 into X
-equal increments and observe the differences in the proportion of women pursuing STEM
-degrees by school. This makes ANOVA a perfect tool to use for this research question because
-we can compare the sample arithmetic means of each of those time periods and identify if there
-is a relation between the proportion of women in STEM and school attended. Put formally, the
-statistical research question is: How has the proportion of women pursuing STEM degrees
-changed over time.
+In this experiment, we are interested in looking at how the proportion of women in STEM has 
+changed over the years by school. To do this, we will split the time period of 1994 – 2003 
+by year and observe the differences in the proportion of women pursuing STEM degrees by school. 
+This makes ANOVA a perfect tool to use for this research question because we can compare the 
+sample arithmetic means of each of those time periods and identify if there is a relation between
+the proportion of women in STEM and school attended. Put formally, the statistical research 
+question is: How has the proportion of women pursuing STEM degrees changed over time. 
 
-
-Additionally, we want to observe how race and gender affects how well the course Calculus I acts
-as a “weed-out” class. Namely, how does race and gender affect the rate of students deciding to
-quit pursuing a STEM field and pursue something different after taking Calculus I. To do this,
-we will look at the number of students who have dropped out of a STEM degree within one
-semester of taking Calc I as compared to the total number of students who have taken Calc I. By
-using a logistic regression model, we will model the probability of a student dropping out of a
-STEM degree, and we will use race and gender as inputs.
+Additionally, we want to observe how race and gender affects how well the course Calculus I acts 
+as a “weed-out” class. Namely, how does race and gender affect the rate of students deciding to 
+quit pursuing a STEM field and pursue something different after taking Calculus I. To do this, 
+we will look at the number of students who have dropped out of a STEM degree within one semester 
+of taking Calc I as compared to the total number of students who have taken Calc I. By using 
+a logistic regression model, we will model the probability of a student dropping out of a STEM 
+degree, and we will use race and gender as inputs. 
 
 ##Discussion of Models
-The Hasse Diagram is given in Figure 1.
+The Hasse Diagram is given in Figure 1. We are using the school year as the treatment while blocking on institutions. 
+
 ```{r hasse, echo=FALSE, fig.cap="Hasse Diagram", fig.align='center', fig.height=4, fig.width=4}
-ALabs <- c("1 Grand Mean 1", " Year ",
-              " (Institution) ", " (Error) ")
+ALabs <- c("1 Grand Mean 1", "10 Year 9",
+              "10 (Institution) 9", " 100 (Error) 81")
 AMat <- matrix(data = F, nrow = 4, ncol = 4)
 AMat[1, c(2:4)] = AMat[c(2:3), 4] = T
 hasseDiagram::hasse(AMat, ALabs)
 ```
 
-The null and alternative hypothesis are formally expressed below.
+As explained above, we will use ANOVA to conduct the analysis. This method is effective because 
+we can observe if there are statistically significant differences in the sample arithmetic means 
+between each school year. If we were to find evidence to reject the null hypothesis that there is 
+no statistically significant difference between the sample arithmetic means, we could then conduct 
+post-hoc analysis to determine if later years caused the proportion of women in STEM to increase. 
+The null and alternative hypothesis are formally expressed below. 
 
 Where $Y_{ij}$ represents the proportion of women in STEM during time period i receiving treatment
 j
 
 ##Methods
 ###Study Design
-In our study, the response will be the proportion of women graduating with STEM degrees, and
-the measurement units will be the 12 institutions given in the MIDFIELD database. Because the
-treatments are applied to the institutions, the 12 institutions are also the experimental units.
-The factor is each incremental time period of X years between 1987 and 2016 which means there
-are Y treatment levels. Because we are using an in-subject repeated measures design, the block will be the same as the subject, the institution.
+In our study, the response will be the proportion of women graduating with STEM degrees, and the 
+measurement units will be 10 institutions given in the MIDFIELD database. Because the treatments 
+are applied to the institutions, the 10 institutions are also the experimental units. The factor 
+is each year between 1994 and 2003 which means there are 10 treatment levels. We chose the time 
+period 1994 – 2003 because the availability of data was best during this period and would produce
+the most accurate information about the differences between school years. Because we are using an 
+in-subject repeated measures design, the block will be the same as the subject, the institution.
 
 The institutions that we got the data about the proportion of women in STEM from were
 randomly chosen for each year. Each institution randomly selected a subset of its population,
@@ -90,47 +96,44 @@ method. Having a type I error would not cause a significant impact nor incur ove
 costs, so having a low evidentiary requirement is justified. We plan to control EER with the
 Protected LSD method.
 
-##Exploratoring the Data
+##Exploring the Data
 ###Attributes
 There are two attributes we are concerned about in this study: the time periods in which we are
 interested and the proportion of women pursuing STEM. Because the question we are interested
 in is the change in the proportion of women over time, graphing the data will provide some
 general useful insights.
 
-Figure 2 and 3 gives plots of the data for all institutions over the entire time period. While there
-are clearly more data available in the earlier years, it does appear that there is an upward trend
-in the proportion of women in STEM. The boxplot graph gives a clearer look at how the sample
-arithmetic means have steadily been increasing as the years increased, but it does show that
-there is variation and that the growth is strictly linear. Because of this, we would expect that
-there is a difference in the sample arithmetic means in the proportion of women in STEM
-between different time periods. We also see that the data is not evenly spread out which
-indicates that the data is not homoscedastic and may require transformation. ANOVA analysis
-will provide greater insight into these details.
+Figure 2 and 3 gives plots of the data for all institutions over the entire time period. Both 
+plots appear to indicate that he majority of institutions had a proportion of women between 
+0.2 – 0.5. Given that, it does not appear that there are any significant changes between years. 
+While it does look like there are some differences between years, there is no clear upward/downward 
+pattern that the data displays as the years increase. This would suggest that as time went on, 
+the proportion of women in STEM had not increased significantly during the period of 1994 – 2003 
+and that there are not statistically significant differences in the sample arithmetic means 
+between the years. ANOVA analysis will provide greater insight into these details.
+
 
 ```{r dataprep, echo=FALSE, include=FALSE}
 m_f<-read.csv("master_anova.csv")
 tpx <- m_f[,1]
+tpx
 instx <- m_f[,2]
 px <- m_f[,3]
-df <- data.frame(tpx,instx, px)
-df
+dfx <- data.frame(tpx,instx, px)
+dfx
 
-  tp <- df[,1]
-inst <- df[,2]
+df <- dfx[-c((seq(1,31, by=1)), seq(132,163, by=1)),]
+df
+row.names(df) <- 1:nrow(df)
+
+tp2 <- df[,1]
+tp <- droplevels(tp2, exclude = if(anyNA(levels(tp2))) NULL else NA)
+inst2 <- df[,2]
+inst <- droplevels(inst2, exclude = if(anyNA(levels(inst2))) NULL else NA)
 p <- df[,3]
 df2 <- data.frame(tp,p)
 df2$tp <- as.factor(df2$tp)
 df2$p <- as.factor(df2$p)
-
-#Prepping Time Periods
-
-TimePeriod <- c(rep("1989 - 1993", 31), rep("1994 - 1998", 50), 
-                rep("1999 - 2003", 50), rep("2004 - 2008", 14), 
-                rep("2009 - 2016", 18))
-PropWomen <- df[,3]
-df3 <- data.frame(TimePeriod, PropWomen)
-df3
-```
 
 
 ```{r strip, echo=FALSE, out.width=".49\\linewidth", fig.cap="Stripchart and Boxplot of Proportion of Women over Time", fig.show = 'hold'}
@@ -139,17 +142,51 @@ stripchart(p~tp, vertical = TRUE,
            xlab = "School Year", 
            main = "Stripchart of Women in STEM")
 
+
+
 #FILL IN REAL BOXPLOT CODE HERE!!!
-plot(p~tp, 
-     pch = 20, 
-     ylab = "Proportion of Women", 
-     xlab = "School Year", 
-     main = "Boxplot of Women in STEM")
-
-```
+boxplot(p~tp, 
+        pch = 20, ylab = 
+        "Proportion of Women", 
+        xlab = "School Year", 
+        main = "Boxplot of Women in STEM")
 
 
-Table 1 gives the values of various descriptive statistics for the proportion of women pursuing STEM degrees by time periods.
+Table 1 gives the values of various descriptive statistics for the proportion of women pursuing STEM 
+degrees by time periods. From the table, we can observe that the sample arithmetic means range from 
+0.31 – 0.38 which indicates that the means are very similar to each other. The year with the lowest 
+proportion of women in STEM is 1998 and the year with the highest proportion is 2002. The sample 
+arithmetic variance is also very small across all the years. The sample skewness values vary across 
+the years which indicate that there may exist some outlier cases. The graphs shown above outline 
+some of the years with outlier cases. 
+
+install.packages("magrittr")
+install.packages("dplyr")
+library(magittr)
+library(dplyr)
+
+getStats <- function(df2)
+
+A <- psych::describeBy(
+  x = df2$p, group = df2$tp, 
+  na.rm = TRUE, interp = TRUE, 
+  quant= c(0.25,0.75), skew = TRUE, 
+  digits = 3, mat = TRUE)
+B <- data.frame(
+  Type = A$group1, 
+  Sample.Max = A$max, 
+  Third.Quartile = A$Q0.75, 
+  Sample.Median = A$median, 
+  First.Quartile = A$Q0.25, 
+  Sample.Min = A$min, 
+  SAM = A$mean, 
+  SAV = round((A$sd)^2,3), 
+  Sample.Skewness = A$skew)
+
+knitr::kable(B, 
+             caption = "Statistics for MIDFIELD Data") %>%
+kableExtra::kable_styling(bootstrap_options = c("striped", "condensed"), font_size = 9, latex_options = "HOLD_position")
+
 
 #Exploring the Change in the Proportion of Women Graduates in STEM Majors over Time
 
