@@ -51,6 +51,8 @@ we will look at the number of students who have dropped out of a STEM degree sho
 a logistic regression model, we will model the probability of a student dropping out of a STEM 
 degree using race and gender as predictors. 
 
+#Exploring the Change in the Proportion of Women Graduates in STEM Majors over Time
+
 ##Discussion of Models
 The Hasse Diagram is given in Figure 1. We are using the school year as the treatment while blocking on institutions. 
 
@@ -104,19 +106,10 @@ interested and the proportion of women pursuing STEM. Because the question we ar
 in is the change in the proportion of women over time, graphing the data will provide some
 general useful insights.
 
-Figure 2 and 3 gives plots of the data for all institutions over the entire time period. Both 
-plots appear to indicate that he majority of institutions had a proportion of women between 
-0.2 – 0.5. Given that, it does not appear that there are any significant changes between years. 
-While it does look like there are some differences between years, there is no clear upward/downward 
-pattern that the data displays as the years increase. This would suggest that as time went on, 
-the proportion of women in STEM had not increased significantly during the period of 1994 – 2003 
-and that there are not statistically significant differences in the sample arithmetic means 
-between the years. ANOVA analysis will provide greater insight into these details.
-
-
 ```{r dataprep, echo=FALSE, include=FALSE}
 m_f<-read.csv("master_anova.csv")
 m_f$term_degree<-as.factor(m_f$term_degree)
+m_f$institution<-as.factor(m_f$institution)
 tpx <- m_f[,1]
 tpx
 instx <- m_f[,2]
@@ -133,9 +126,9 @@ tp <- droplevels(tp2, exclude = if(anyNA(levels(tp2))) NULL else NA)
 inst2 <- df[,2]
 inst <- droplevels(inst2, exclude = if(anyNA(levels(inst2))) NULL else NA)
 p <- df[,3]
-df2 <- data.frame(tp,p)
+df2 <- data.frame(tp,inst,p)
 df2$tp <- as.factor(df2$tp)
-df2$p <- as.factor(df2$p)
+df2$inst <- as.factor(df2$inst)
 ```
 
 ```{r strip, echo=FALSE, out.width=".49\\linewidth", fig.cap="Stripchart and Boxplot of Proportion of Women over Time", fig.show = 'hold'}
@@ -144,9 +137,6 @@ stripchart(p~tp, vertical = TRUE,
            xlab = "School Year", 
            main = "Stripchart of Women in STEM")
 
-
-
-#FILL IN REAL BOXPLOT CODE HERE!!!
 boxplot(p~tp, 
         pch = 20, ylab = 
         "Proportion of Women", 
@@ -154,13 +144,15 @@ boxplot(p~tp,
         main = "Boxplot of Women in STEM")
 ```
 
-Table 1 gives the values of various descriptive statistics for the proportion of women pursuing STEM 
-degrees by time periods. From the table, we can observe that the sample arithmetic means range from 
-0.31 – 0.38 which indicates that the means are very similar to each other. The year with the lowest 
-proportion of women in STEM is 1998 and the year with the highest proportion is 2002. The sample 
-arithmetic variance is also very small across all the years. The sample skewness values vary across 
-the years which indicate that there may exist some outlier cases. The graphs shown above outline 
-some of the years with outlier cases. 
+Figure 2 and 3 gives plots of the data for all institutions over the entire time period. Both 
+plots appear to indicate that he majority of institutions had a proportion of women between 
+0.2 – 0.5. Given that, it does not appear that there are any significant changes between years. 
+While it does look like there are some differences between years, there is no clear upward/downward 
+pattern that the data displays as the years increase. This would suggest that as time went on, 
+the proportion of women in STEM had not increased significantly during the period of 1994 – 2003 
+and that there are not statistically significant differences in the sample arithmetic means 
+between the years. ANOVA analysis will provide greater insight into these details.
+
 ```{r kabtab, echo=FALSE}
 #getStats <- function(df2)
 
@@ -186,8 +178,136 @@ kableExtra::kable_styling(bootstrap_options = c("striped", "condensed"),
                           font_size = 9, latex_options = "HOLD_position")
 ```
 
-#Exploring the Change in the Proportion of Women Graduates in STEM Majors over Time
 
+Table 1 gives the values of various descriptive statistics for the proportion of women pursuing STEM 
+degrees by time periods. From the table, we can observe that the sample arithmetic means range from 
+0.31 – 0.38 which indicates that the means are very similar to each other. The year with the lowest 
+proportion of women in STEM is 1998 and the year with the highest proportion is 2002. The sample 
+arithmetic variance is also very small across all the years. The sample skewness values vary across 
+the years which indicate that there may exist some outlier cases. The graphs shown above outline 
+some of the years with outlier cases. 
+
+##ANOVA Assumption Testing
+
+In order to properly make use of our One Way Repeated Measures (Within-Subjects) ANOVA Model, we must first check that our data passes the proper assumption for such a model. These assumptions are the normality of our residuals as well as our random effects, homoscedasticity of our residuals, as well as a lack of interaction between on subjects and treatments. Upon checking the assumptions of our original data, we noticed many issues regarding the normality and homoscedasticity within the data, and decided to use a log-transformation of our response variable in order to adjust to our model \footnote{An inclusion of the assumption visualizations for the original data along with a detailed explanation has been included within Appendix B}.  
+
+```{r logWSANOVAModel, echo=FALSE, include=FALSE}
+df2$logp <- log(df2$p)
+midfieldLogM1 <- lme4::lmer(logp ~ tp + (1| inst), data = df2)
+```
+
+###Normality of Residuals and Random Effects
+
+```{r logNormality, echo=FALSE}
+anovaFE <- car::qqPlot(
+  x = residuals(midfieldLogM1),
+  distribution = "norm",
+  envelope = 0.90,
+  xlab = "Normal Quantiles",
+  ylab = "Log-Transformed Proportion of Woman Graduating (STEM)",
+  pch = 19
+)
+```
+
+Looking the the Normal Quantile Plot of the residuals for our log-transormed data, we see that our residuals exist mostly within our 90% confidence envelope.  There do appear to be a couple of value either on the edge or just outside of the confidence envelope, which could represent slight potential outliers within the data. However, these values appear to deviate very slightly from a normal distribution, thus we will assume that our residuals appear to be normally distributed. 
+
+```{r logNormalityRE, echo=FALSE}
+anovaRE <- car::qqPlot(
+  x = lme4::ranef(midfieldLogM1)$inst[, "(Intercept)"],
+  distribution = "norm",
+  envelope = 0.90,
+  xlab = "Normal Quantiles",
+  ylab = "Log-Transformed Proportion of Woman Graduating (STEM)",
+  pch = 19
+)
+```
+
+Within the figure above, we are given an visualization of the Normal Quantile plot for our random effects (Our institutions).  Within the plot, all values appear to be within the 90% confidence envelope.  There appears to be no presence in potential outliers within the plot.  Thus, our random effects appear to be normally distributed, and we can assume that normality of our residuals and random effects have been satisfied.
+
+###Homoscedasticity of Residuals
+
+```{r logHomoscedasticity, echo=FALSE}
+plot(midfieldLogM1, which = 1, pch = 19, xlab = "Fitted Values", ylab = "Residuals")
+```
+
+In order to interpret the homoscedasticity of our residuals, we turn to the Tukey-Anscombe plot above.  Upon our initial analysis, there appears to be no fanning present within our plot, which is a good indicator that homoscedasticity is present.  We can also roughly see that their is no large difference in the vertical spread of our residuals. Thus, we will decide that our assumption of normality has been satisfied.
+
+###Interaction
+
+```{r logInteraction, echo=FALSE}
+ggplot2::ggplot(data = df2,
+  mapping = aes(x = tp, y = logp, color = inst, group = inst)) +
+  geom_point(size=2) +
+  geom_line(size=1) +
+  facet_wrap(~ inst, ncol = 2) +
+  theme_bw() +
+  xlab("Term Year") +
+  ylab("Log-Transformed Proportion of Woman Graduating (STEM)") +
+  labs(color = "Institution")
+```
+
+##Multivariate Omnibus Results
+
+```{r multiV, echo=FALSE}
+df2Wide <- tidyr::pivot_wider(df2,id_cols = inst, names_from = tp, values_from = logp)
+responseWide <- as.matrix(df2Wide[ , 2:11])
+midfieldMV <- lm(responseWide ~ 1)
+Term_Year <- factor(levels(df2$tp))
+
+### Create the table object
+outputMV <- car::Anova(midfieldMV, idata = data.frame(Term_Year),
+                   idesign = ~Term_Year, type = "III")
+midfieldMultivariate <- summary(outputMV, multivariate=FALSE)
+```
+
+```{r univariate Results, echo=FALSE}
+options(knitr.kable.NA= "")
+knitr::kable(
+  data.frame(unclass(midfieldMultivariate$univariate.tests)),
+  digits = 3,
+  col.names = c("Term SS", "Numerator DF", "Error SS", "Denominator DF", "F Ratio", "p-value"),
+  caption = "ANOVA Table Within-Subjects: Log-Proportion of Women Graduating in STEM",
+  align = c('l',rep('c',6))
+) %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "condensed"),
+    font_size = 12, latex_options = "HOLD_position") %>%
+  kableExtra::footnote(
+    general = "Computer rounding has made the p-values look like zero.",
+    footnote_as_chunk = T)
+```
+
+```{r Sphericity, echo=FALSE}
+options(knitr.kable.NA= "")
+knitr::kable(
+  data.frame(unclass(midfieldMultivariate$sphericity.tests)),
+  digits = 3,
+  col.names = c("Test Statistic", "p-value"),
+  caption = "Mauchly Test for Sphericity",
+  align = c('l',rep('c',2))
+) %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "condensed"),
+    font_size = 12, latex_options = "HOLD_position") %>%
+kableExtra::footnote(
+    general = "Computer rounding has made test statistic appear to be zero.",
+    footnote_as_chunk = T)
+
+options(knitr.kable.NA= "")
+knitr::kable(
+  data.frame(unclass(midfieldMultivariate$pval.adjustments)),
+  digits = 3,
+  col.names = c("Greenhouse-Geiser", "p-value", "Huynh-Feldt", "p-value"),
+  caption = "Adjustments for Sphericity Violations",
+  align = c('l',rep('c',4))
+) %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "condensed"),
+    font_size = 12, latex_options = "HOLD_position") %>%
+  kableExtra::footnote(
+    general = "Huynh-Feldt eps is being treated as 1.",
+    footnote_as_chunk = T)
+```
 
 
 #Exploring the Effect of Race and Gender on Drop Out Rates after Introductory Calculus
@@ -451,7 +571,7 @@ knitr::kable(
 ##Analysis Specific to Women in STEM
   While finding the proportion of women STEM graduates by institution by year was rather straightforward, there were a few modelling decisions regarding the data. The first decision was to exclude all data that came from a year and institution that graduated fewer than 10 STEM students in the given year. This was done with the intention of helping to improve the reliability of the data. 
   
-  INSERT FINAL DECISION ON WHICH DATA TO SELECT HERE; UNLESS THIS IS GOING INTO THE ANOVA SECTION ABOVE
+  A challenge that was ran into was fitting the data into the One Way Repeated Measures (Within-Subjects) ANOVA Model. Due to the result of the data exclusion mentioned above. Our subjects for our study (the individual institutions) no longer had a response value for every treatment, making our blocks incomplete. To combat this issue, two decisions were made. First, two institutions, institutions l and d, were removed from the data due to the lack of response values from the treatments. The second decision was to subset the Midfield data to include response values from the time period of 1994-2003, rather than the original time period of 1989-2016. This decision was reached to include the largest set of consecutive years in which each institution provided a proper response value, thus making the blocks complete.  
 
 ##Analysis Specific to Dropout Rates after Calculus 1
   The most complicated challenge that we faced was to identify which semester the student took their first calculus course. This issue primarily involves the midfieldcourses data table. There are two identifiers for course in this table: course title and course code. While the course title can rather clearly identify courses that could be considered Calculus 1, only three institutions, institutions c, d, and l, provided course titles in the data. 
@@ -459,6 +579,50 @@ knitr::kable(
   This leaves the course code as an identifier of course. These codes, however, vary by institution and are not standardized to match to particular courses. In order to approach this issue and allow more of the data to be used, we began cross-referencing subsets of course codes from particular institutions in order to attempt to match the anonymized data to a particular institution or a particular coding key in order to figure out which course code matches to Calculus 1. Note that in the attempt to create this matching, we excluded math courses from the matching set then ensured the predicted Calculus 1 course appeared in the data set. The institutions that were identified using this method were institutions a, b, e, h, j, and l. We were unable to identify the remaining institutions, so they were excluded from the second part of our analysis.  
   
   Another major considertation to make was how to define when a student drops out of the STEM field in association with Calculus 1. Noting that the data considers each year to contain six semesters, we defined a student to have dropped out of the STEM field in association with Calculus 1 if they do not graduate with a STEM degree and they do not appear in a STEM program in the fourth, fifth, or sixth semesters following the most recent taking of the course. Simply put, we sample the time period between six months and a year after the course and see whether or not the student is still in STEM. The consideration of whether or not the graduate in STEM prevents the accidental elimination of any student that gradutates immediately or shortly after Calculus 1 while the slight delay between the measurement era and the actual taking of the course gives time for the student to choose to drop out or change majors and for this change to be recorded. 
+
+\newpage
+#Appendix B: Assumptions on Non-transformed Data
+
+  Upon performing our assumption testing for a One Way Repeated Measures (Within-Subjects) ANOVA Model, we had noticed issues with the normality and homoscedasticity of the original data. We have included the graphs used to interpret the normality and homoscedasticity below.
+
+```{r WSANOVAModel, echo=FALSE, include=FALSE}
+options("contrasts" = c("contr.sum","contr.poly"))
+midfieldM1 <- lme4::lmer(p ~ tp + (1| inst), data = df2)
+```
+
+```{r normality, echo=FALSE}
+anovaFE <- car::qqPlot(
+  x = residuals(midfieldM1),
+  distribution = "norm",
+  envelope = 0.90,
+  xlab = "Normal Quantiles",
+  ylab = "Proportion of Woman Graduating (STEM)",
+  pch = 19
+)
+```
+
+  Looking at the Normal Quantile Plot of the original data's residuals above, We quickly notice a large positive skew in our residuals. Due to the large amount of values existing outside of our 90% confidence envelope, we can interpret that our residuals do not appear to normally distributed.  This lack of normality is a sign that a potential transformation of the data would be sufficient.
+
+```{r normalityRE, echo=FALSE}
+anovaRE <- car::qqPlot(
+  x = lme4::ranef(midfieldM1)$inst[, "(Intercept)"],
+  distribution = "norm",
+  envelope = 0.90,
+  xlab = "Normal Quantiles",
+  ylab = "Proportion of Woman Graduating (STEM)",
+  pch = 19
+)
+```
+
+  Upon analysis of the Normal Quantile plot for our original data's random effects, we see a potentially troublesome data point within the plot. More specifically, there seems to a potential outlier represented the the top right of our plot. Since this value is outside of 90% confidence envelope, we assume that the normality of our random effects is not satisfied. Due to the lack of robustness within a random effects model, even slight deviances to normality such as the one we faced above can not be tolerated by the ANOVA model.
+
+```{r homoscedasticity, echo=FALSE}
+plot(midfieldM1, which = 1, pch = 19, xlab = "Fitted Values", ylab = "Residuals")
+```
+
+  Finally, we take a look at the Tukey-Anscombe plot above in order to interpret our assumption of homoscedasticity. Looking at the plot, we notice a fanning pattern present within our residuals. Due to the lack of robustness within our model, we have decided to conclude that our residuals appear to not be homoscedastic.
+
+  Due to all the issues present when checking the assumptions for our model, we felt it neccessary to transform the original data.  Upon several trials with different transformations, we decided that a log-transformation appeared to fit the most appropriately with our data.
 
 \newpage
 #Appendix C: Modified Logistic Regression Models
