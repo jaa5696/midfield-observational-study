@@ -6,6 +6,7 @@ output: pdf_document
 
 ```{r imports, echo=FALSE, include=FALSE}
 library(tidyr)
+library(dplyr)
 library(data.table)
 library(midfielddata)
 library(Metrics)
@@ -15,6 +16,7 @@ library(ggplot2)
 library(hasseDiagram)
 library(kableExtra)
 library(cowplot)
+library(wesanderson)
 ```
 
 #Introduction
@@ -189,25 +191,46 @@ gg2<-ggplot(data=trainp, aes(x=sex, fill = as.factor(dropout))) +
   geom_bar() + 
   facet_grid (~race) + 
   theme(legend.position = "none") 
+```
 
+```{r comboplots, echo=FALSE, fig.height = 3, fig.cap = "Dropouts by race and gender"}
 # Combine plots
 plot_grid(gg1, gg2, rel_widths = c(3.5,1))
-
-# Correct training data to be ready for the rest of the analysis
-train[,race:=ifelse(race=="Nat. Am.","Native American", race)]
-train$sex<-as.factor(train$sex)
-train$race<-as.factor(train$race)
-
 ```
+
+
 
 Viewing the above visualization, we see that we are treating gender as a factor, for which we will assume only two levels. Race is a factor which we will treat as having six levels: white, asian, black, hispanic, native american, and other minorities. Note that the other minority group also contains the category international, which was included in the midfield dataset but regrouped to other minorities for this analysis. It is also worth considering the wide variety in sample size between the different categories, with white having an overwhelming majority and Native American having only barely enough to be considered as an individual category.   
 
 Considering this visualization relative to our subject, we see that females and several minority groups appear to be overall underrepresented in this data. Females also appear to generally have higher numbers of dropouts relative to population size for most races.
 
 ##Assumption Testing
-Logistic regression requires five assumptions to be satisfied: appropriate outcome structure, independence of observations, absence of multicollinearity, linearity of independent vars and log odds, and sufficiently large sample size. \cite{glmassumptions} The first and last of these are clearly met as we designed the dependent variable to be binary and the size of the sample considered is over 8,000 students.\footnote{The full Midfield dataset contains over 97,000 students. The smaller number used in the analysis is a result of filtering the students to STEM students who were identified as having taken an introductory calculus course.} 
+Logistic regression requires five assumptions to be satisfied: appropriate outcome structure, independence of observations, absence of multicollinearity, linearity of independent vars and log odds, and sufficiently large sample size. \cite{glmassumptions} The first and last of these are clearly met as we designed the dependent variable to be binary and the size of the sample considered is over 8,000 students.\footnote{The full Midfield dataset contains over 97,000 students. The smaller number used in the analysis is a result of filtering the students to STEM students who were identified as having taken an introductory calculus course.} We do conceed, however,that some individual groups, such as female native americans, do have a somewhat small sample size within this large group, so this conclusions drawn for such groups must be closely ridiculed. 
 
-NEED TO DO FOURTH ASSUMPTION...maybe
+Considering the linearity of independent variables relative to log odds, we compare the dropout rate of each individual group in the below plot. 
+
+```{r secondplot, echo=FALSE, fig.height=2, fig.cap="Dropout rates compared by race and gender"}
+trainp2<-train
+trainp2<-trainp2[,drop_rate:=mean(dropout), keyby=c("race", "sex")]
+#trainp2$n<-aggregate(x=c("race", "sex"))
+
+trainp3<-train
+trainp3<-trainp2[,n:=.N, keyby=c("race", "sex")]
+#trainp3$n<-ifelse(train
+trainp3$race<-factor(trainp2$race, levels=c("Asian", "White", "Black", "Hispanic", "Other", "Nat. Am."))
+ggplot(aes(x=race, y=sex, color=n), data=trainp3) + geom_text(aes(label=round(drop_rate, digits=2)), size=6) + scale_color_gradientn(colours = wes_palette("Darjeeling1", 10, type = "continuous")) +
+  labs(color="Number of Observations") + theme_bw()+
+  theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+  
+```
+
+```{r correction, echo=FALSE, include=FALSE}
+# Correct training data to be ready for the rest of the analysis
+train[,race:=ifelse(race=="Nat. Am.","Native American", race)]
+train$sex<-as.factor(train$sex)
+train$race<-as.factor(train$race)
+```
 
 
 ```{r start_glm, echo=FALSE, include=FALSE}
@@ -222,6 +245,9 @@ glm_model<-glm(dropout ~ Gender + Race, family = binomial, data = train)
 car::vif(glm_model)
 
 ```
+
+We see that for the three largest groups females have higher dropout rates than males with other minorities as equal and the last two categories having the reverse trend. Likewise, for most pairs of races, similarities and differences in proportion dropping increase or decrease consistently for males and females with the Hispanic and Native American groups again providing the only mild exceptions, for example comparing either to the Other Minorities category. This implies that there could be some mild issues with the assumption of the independent variables'  linearity with log odds. We will, however, still proceed with the analysis noting that these mild issues primarily occur among the least common groups in the population and that any results of the analysis pertaining to these smaller groups will need to be done cautiously. 
+
 To consider multicollinearity, we can use the variance inflation factor (vif). The calculated values for vif were 1.009 for each predictor, which is less than 4, the commonly used indicator of collinearity problems. Therefore, we may proceed under the assumption that this assumption holds.
 
 
