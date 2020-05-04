@@ -1,7 +1,14 @@
 ---
 title: "Analyzing Data from the MIDFIELD Project"
 author: "Javier Alvarez, Leah Hunt, and Joshua Kwak"
-output: pdf_document
+output: 
+  pdf_document :
+    fig_caption: yes
+    keep_tex: true
+    number_sections: true
+header-includes:
+ \usepackage{float}
+ \floatplacement{figure}{H}
 ---
 
 ```{r imports, echo=FALSE, include=FALSE}
@@ -19,6 +26,7 @@ library(cowplot)
 library(wesanderson)
 library(magrittr)
 library(psych)
+suppressMessages(library(car))
 ```
 
 #Introduction
@@ -71,7 +79,7 @@ points. Although the institutions were randomized to account for this fact, it d
 potential source of error/inaccuracy of the model in our ANOVA analysis.
 
 ##Discussion of Models
-The Hasse Diagram is given in Figure 1. We are using the school year as the treatment while blocking on institutions. 
+The Hasse Diagram is given in Figure \ref{fig:hasse}. We are using the school year as the treatment while blocking on institutions. 
 
 ```{r hasse, echo=FALSE, fig.cap="Hasse Diagram", fig.align='center', fig.height=4, fig.width=4}
 ALabs <- c("1 Grand Mean 1", "10 Year 9",
@@ -81,26 +89,17 @@ AMat[1, c(2:4)] = AMat[c(2:3), 4] = T
 hasseDiagram::hasse(AMat, ALabs)
 ```
 
-As explained above, we will use ANOVA to conduct the analysis. This method is effective because 
-we can observe if there are statistically significant differences in the sample arithmetic means 
-between each school year. If we were to find evidence to reject the null hypothesis that there is 
-no statistically significant difference between the sample arithmetic means, we could then conduct 
-post-hoc analysis to determine if later years caused the proportion of women in STEM to increase. 
-The null and alternative hypothesis are formally expressed below. 
+As explained above, we will use ANOVA to conduct the analysis. After analyzing the Hasse diagram found in Figure \ref{fig:hasse}, we decided the best model to use for our study is a One Way Repeated Measures (Within-Subjects) ANOVA Model.  This method is effective because we can observe if there are statistically significant differences in the sample arithmetic means between each school year. This will also allow to reduce the amount of subject-to-subject variation present within our model by applying each "year treatment" to each individual institution. If we were to find evidence to reject the null hypothesis that there is no statistically significant difference between the sample arithmetic means, we could then conduct post-hoc analysis to determine if later years caused the proportion of women in STEM to increase. The null and alternative hypothesis are formally expressed below. 
 
-CHECK IF THIS WORKS HERE!!!!!
-\begin{align*}
-H_0:\;\text{ There is a statistically significant difference in the proportion of women graduating with STEM degrees within our collection of institutions due to the term year. }
-H_A:\;\text{ Not }H_0 
-\end{align*}
+INSERT HYPOTHESIS CORRECTLY
+
 
 ###Type I Error Rate
 We have decided that we will control Experimentwise Error Rate at 10% (\(\mathcal{E}_{I}=0.10\)) for both
 components of our study (ANOVA and Logistic Regression portions). Given the low-stakes
 nature of our study, we believed it was reasonable to use a more liberal Type I Error control
 method. Having a Type I Error would not cause a significant impact nor incur overwhelming
-costs, so having a low evidentiary requirement is justified. We plan to control EER with the
-Protected LSD method. We also plan to set our unusualness threshold at the same level as our Type I Error Rate (*UT* = 0.10).
+costs, so having a low evidentiary requirement is justified. The EER will be naturally controlled through the use of our ANOVA F Test of our model. We also plan to set our unusualness threshold at the same level as our Type I Error Rate (*UT* = 0.10).
 
 ##Exploring the Data
 ###Attributes
@@ -110,7 +109,7 @@ in is the change in the proportion of women over time, graphing the data will pr
 general useful insights.
 
 ```{r dataprep, echo=FALSE, include=FALSE}
-m_f<-read.csv("master_anova.csv")
+m_f<-read.csv("~/master_anova.csv")
 m_f$term_degree<-as.factor(m_f$term_degree)
 m_f$institution<-as.factor(m_f$institution)
 tpx <- m_f[,1]
@@ -147,7 +146,7 @@ boxplot(p~tp,
         main = "Boxplot of Women in STEM")
 ```
 
-Figure 2 and 3 gives plots of the data for all institutions over the entire time period. Both 
+Figure \ref{fig:strip} gives plots of the data for all institutions over the entire time period. Both 
 plots appear to indicate that he majority of institutions had a proportion of women between 
 0.2 – 0.5. Given that, it does not appear that there are any significant changes between years. 
 While it does look like there are some differences between years, there is no clear upward/downward 
@@ -165,20 +164,30 @@ A <- psych::describeBy(
   quant= c(0.25,0.75), skew = TRUE, 
   digits = 3, mat = TRUE)
 B <- data.frame(
-  Type = A$group1, 
+  Year = A$group1, 
   Sample.Max = A$max, 
-  Third.Quartile = A$Q0.75, 
+  Q3= A$Q0.75, 
   Sample.Median = A$median, 
-  First.Quartile = A$Q0.25, 
+  Q1 = A$Q0.25, 
   Sample.Min = A$min, 
   SAM = A$mean, 
   SAV = round((A$sd)^2,3), 
   Sample.Skewness = A$skew)
 
 knitr::kable(B, 
-             caption = "Statistics for MIDFIELD Data") %>%
+             caption = "Statistics for MIDFIELD Data",
+             align = c('c', rep('r', 9))) %>%
 kableExtra::kable_styling(bootstrap_options = c("striped", "condensed"),
-                          font_size = 9, latex_options = "HOLD_position")
+                          font_size = 9, latex_options = "HOLD_position")%>% 
+  column_spec(1, width = '0.3in') %>%
+  column_spec(2, width = "0.7in")%>%
+  column_spec(3, width = "0.25in")%>%
+  column_spec(4, width = "0.8in")%>%
+  column_spec(5, width = "0.25in")%>%
+  column_spec(6, width = "0.7in")%>%
+  column_spec(7, width = "0.4in")%>%
+  column_spec(8, width = "0.4in")%>%
+  column_spec(9, width = "0.8in")
 ```
 
 
@@ -192,7 +201,9 @@ some of the years with outlier cases.
 
 ##ANOVA Assumption Testing
 
-In order to properly make use of our One Way Repeated Measures (Within-Subjects) ANOVA Model, we must first check that our data passes the proper assumption for such a model. These assumptions are the normality of our residuals as well as our random effects, homoscedasticity of our residuals, as well as a lack of interaction between our subjects. Since we are also expecting a lack of independence between our observations, we will be using Mauchly's test of Sphericity to compensate for such violations. Upon checking the assumptions of our original data, we noticed many issues regarding the normality and homoscedasticity within the data, and decided to use a log-transformation of our response variable in order to adjust to our model \footnote{An inclusion of the assumption visualizations for the original data along with a detailed explanation has been included within Appendix B}.  
+In order to properly make use of our One Way Repeated Measures (Within-Subjects) ANOVA Model, we must first check that our data passes the proper assumption for such a model. These assumptions are the normality of our residuals as well as our random effects, homoscedasticity of our residuals, as well as a lack of interaction between our subjects. Since we are also expecting a lack of independence between our observations, we will be using Mauchly's test of Sphericity to compensate for such violations. Upon checking the assumptions of our original data, we noticed many issues regarding the normality and homoscedasticity within the data, and decided to use a log-transformation of our response variable in order to adjust to our model \footnote{An inclusion of the assumption visualizations for the original data along with a detailed explanation has been included within Appendix B}.
+
+\clearpage
 
 ```{r logWSANOVAModel, echo=FALSE, include=FALSE}
 df2$logp <- log(df2$p)
@@ -200,7 +211,7 @@ midfieldLogM1 <- lme4::lmer(logp ~ tp + (1| inst), data = df2)
 ```
 
 
-```{r multiV, echo=FALSE}
+```{r multiV, echo=FALSE, warning=FALSE}
 df2Wide <- tidyr::pivot_wider(df2,id_cols = inst, names_from = tp, values_from = logp)
 responseWide <- as.matrix(df2Wide[ , 2:11])
 midfieldMV <- lm(responseWide ~ 1)
@@ -214,59 +225,63 @@ midfieldMultivariate <- summary(outputMV, multivariate=FALSE)
 
 ###Normality of Residuals and Random Effects
 
-```{r logNormality, echo=FALSE}
+```{r logNormality, echo=FALSE, fig.height=4, fig.width=5, fig.cap="Normal Quantile Plot (Residuals) for Log-Transformed MIDFIELD Data"}
 anovaFE <- car::qqPlot(
   x = residuals(midfieldLogM1),
   distribution = "norm",
   envelope = 0.90,
   xlab = "Normal Quantiles",
-  ylab = "Log-Transformed Proportion of Woman Graduating (STEM)",
+  ylab = "Log-Prop. of Woman Graduating (STEM)",
   pch = 19
 )
 ```
 
-Looking AT the Normal Quantile Plot of the residuals for our log-transormed data, we see that our residuals exist mostly within our 90% confidence envelope.  There do appear to be a couple of value either on the edge or just outside of the confidence envelope, which could represent slight potential outliers within the data. However, these values appear to deviate very slightly from a normal distribution, thus we will assume that our residuals appear to be normally distributed. 
+Looking at the Normal Quantile Plot of the residuals for our log-transormed data seen in Figure 3, we see that our residuals exist mostly within our 90% confidence envelope.  There do appear to be a couple of value either on the edge or just outside of the confidence envelope, which could represent slight potential outliers within the data. However, these values appear to deviate very slightly from a normal distribution, thus we will assume that our residuals appear to be normally distributed. 
 
-```{r logNormalityRE, echo=FALSE}
+```{r logNormalityRE, echo=FALSE, fig.height=4, fig.width=5, fig.cap="Normal Quantile Plot (Random Effects) for Log-Transformed MIDFIELD Data"}
 anovaRE <- car::qqPlot(
   x = lme4::ranef(midfieldLogM1)$inst[, "(Intercept)"],
   distribution = "norm",
   envelope = 0.90,
   xlab = "Normal Quantiles",
-  ylab = "Log-Transformed Proportion of Woman Graduating (STEM)",
+  ylab = "Log-Prop. of Woman Graduating (STEM)",
   pch = 19
 )
 ```
 
-Within the figure above, we are given an visualization of the Normal Quantile plot for our random effects (Our institutions).  Within the plot, all values appear to be within the 90% confidence envelope.  There appears to be no presence in potential outliers within the plot.  Thus, our random effects appear to be normally distributed, and we can assume that normality of our residuals and random effects have been satisfied.
+Within Figure 4 above, we are given an visualization of the Normal Quantile plot for our random effects (our institutions).  Within the plot, all values appear to be within the 90% confidence envelope.  There appears to be no presence in potential outliers within the plot.  Thus, our random effects appear to be normally distributed, and we can assume that normality of our residuals and random effects have been satisfied.
 
 ###Homoscedasticity of Residuals
 
-```{r logHomoscedasticity, echo=FALSE}
+```{r logHomoscedasticity, echo=FALSE, fig.height=4, fig.width=5, fig.cap="Tukey-Anscombe Plot for Log-Transformed MIDFIELD Data"}
 plot(midfieldLogM1, which = 1, pch = 19, xlab = "Fitted Values", ylab = "Residuals")
 ```
 
-In order to interpret the homoscedasticity of our residuals, we turn to the Tukey-Anscombe plot above.  Upon our initial analysis, there appears to be no fanning present within our plot, which is a good indicator that homoscedasticity is present.  We can also roughly see that their is no large difference in the vertical spread of our residuals. Thus, we will decide that our assumption of normality has been satisfied.
+In order to interpret the homoscedasticity of our residuals, we turn to the Tukey-Anscombe plot within Figure 5.  Upon our initial analysis, there appears to be no fanning present within our plot, which is a good indicator that homoscedasticity is present.  We can also roughly see that their is no large difference in the vertical spread of our residuals. Thus, we will decide that our assumption of normality has been satisfied.
 
 ###Interaction
 
-```{r logInteraction, echo=FALSE}
-ggplot2::ggplot(data = df2,
+
+```{r logInteraction, echo=FALSE, fig.caption="Interaction Plot for Log-Transformed MIDFIELD Data", fig.show="hold"}
+ggplot(data = df2,
   mapping = aes(x = tp, y = logp, color = inst, group = inst)) +
   geom_point(size=2) +
   geom_line(size=1) +
   facet_wrap(~ inst, ncol = 2) +
   theme_bw() +
   xlab("Term Year") +
-  ylab("Log-Transformed Proportion of Woman Graduating (STEM)") +
+  ylab("Log-Prop. of Woman Graduating (STEM)") +
   labs(color = "Institution") +
-  theme(legend.position="top")
+  theme(legend.position="top") +
+  scale_x_discrete(breaks=seq(1994, 2002, 2))
 
 ```
 
-In order to use our ANOVA model, we must check for a lack of interaction between our subjects. Using the plots above, we are given the individual plots for the log-proportion of women graduating in STEM by term year. Within the plot, we see potential interactions present such as between the years 1995 and 1996 for institution's A and G. However there appear to be few visual cues of interactions present, so we will proceed with caution and assume that there is no interaction present.
+
+In order to use our ANOVA model, we must check for a lack of interaction between our subjects. Using the interaction plots above, we are given the individual plots for the log-proportion of women graduating in STEM by term year. Within the plot, we see potential interactions present such as between the years 1995 and 1996 for institution's A and G. However there appear to be few visual cues of interactions present, so we will proceed with caution and assume that there is no interaction present.
 
 ###Sphericity
+
 ```{r Sphericity, echo=FALSE}
 options(knitr.kable.NA= "")
 knitr::kable(
@@ -285,7 +300,7 @@ kableExtra::footnote(
 
 ```
 
-Lastly, we will be using the results from Mauchly's test of Sphericity in order to determine if our repeated measures are compoundly symmetrical.  Upon analysis of this test, we see that we acheived a p-value of 0.019.  Comparing our p-value to our Type I Error Rate of 0.1, we determine that our p-value is much less than our error rate. THus, we will decide that our data violates the assumption of sphericity. We will proceed with our omnibus testing, however we will include adjustments methods to combat our violation of sphericity.
+Lastly, we will be using the results from Mauchly's test of Sphericity in order to determine if our repeated measures are compoundly symmetrical.  Upon analysis of Table 2 above, we see that we acheived a *p*-value of 0.019.  Comparing our p-value to our Type I Error Rate of 0.1, we determine that our p-value is much less than our error rate. THus, we will decide that our data violates the assumption of sphericity. We will proceed with our omnibus testing, however we will include adjustments methods to combat our violation of sphericity.
 
 ##Omnibus Results
 
@@ -307,7 +322,7 @@ knitr::kable(
     footnote_as_chunk = T)
 ```
 
-Looking at the results or our Repeated Measures ANOVA Model above, we see that our term year achieved an *F* Ratio of 1.155. In other words, our term year factor accounts for around 1.15 times the variation as our error term. We would most likely expect to achieve an F Ratio such as this 33% (*p*-value = 0.335) of time under our model's null hypothesis, which is a considerable amount of time. Comparing our *p*-value with our unusualness threshold (*UT* = 0.10), we can see that our *p*-value is not less than our threshold, which in turn would result in the decision of failing to reject our model's null hypothesis. However, due to the issues with sphericity that we noted earlier, we must adjust our model to account for our violations.
+Looking at the results or our Repeated Measures ANOVA Model above in Table 3, we see that our term year achieved an *F* Ratio of 1.155. In other words, our term year factor accounts for around 1.15 times the variation as our error term. We would most likely expect to achieve an F Ratio such as this 33% (*p*-value = 0.335) of time under our model's null hypothesis, which is a considerable amount of time. Comparing our *p*-value with our unusualness threshold (*UT* = 0.10), we can see that our *p*-value is not less than our threshold, which in turn would result in the decision of failing to reject our model's null hypothesis. However, due to the issues with sphericity that we noted earlier, we must adjust our model to account for our violations.
 
 ```{r sphericityAdjustments, echo=FALSE}
 knitr::kable(
@@ -325,7 +340,7 @@ knitr::kable(
     footnote_as_chunk = T)
 ```
 
-In order to handle our violations of sphericity, we look upon the Greenhouse-Geiser and Huynh-Feldt adjustments of our *p*-value. Our p-values using Greenhouse-Geiser and Huynh-Feldt adjustments are 0.347 and 0.335, respectively. Even when we use these adjusted *p*-values, we still see that our *p*-values are much greater than our unusualness threshold (*UT* = 0.10). Thus, we will fail to reject our null hypothesis and continue to act as if there is no significant difference in the log proportion of women graduating with STEM degrees in our collection of institutions due to the term year. In other words, we interpret that there is not a significant increase or decrease in the proportion of women graduating in STEM fields throughout our selected time period.
+In order to handle our violations of sphericity, we look upon the Greenhouse-Geiser and Huynh-Feldt adjustments of our *p*-value. Table 4 provides us with these adjustments. Our p-values using Greenhouse-Geiser and Huynh-Feldt adjustments are 0.347 and 0.335, respectively. Even when we use these adjusted *p*-values, we still see that our *p*-values are much greater than our unusualness threshold (*UT* = 0.10). Thus, we will fail to reject our null hypothesis and continue to act as if there is no significant difference in the log proportion of women graduating with STEM degrees in our collection of institutions due to the term year. In other words, we interpret that there is not a significant increase or decrease in the proportion of women graduating in STEM fields throughout our selected time period.
 
 #Exploring the Effect of Race and Gender on Drop Out Rates after Introductory Calculus
 The second portion to our analysis considers the role of the introductory calculus course as a weed out course for STEM majors. Introductory calculus is a requirement for nearly all STEM majors and is one of the most commonly cited reasons for students to leave the STEM major. \cite{paper} While works such as that done by Rasmussen and Ellis have considered factors impacting the probability of continuing the calculus curriculum after the first calculus course, we wish to consider factors that impact students' probability of leaving the STEM major after introductory calculus, in particular to see how the probability varies by race and gender. 
@@ -335,7 +350,7 @@ To consider this problem, we use the MIDFIELD data to identify STEM students who
 ##Exploratory Analysis
 ```{r dinput, echo=FALSE, include=FALSE}
 #Load data for logistic regression analysis
-train<-fread("master_glm.csv") #Assumed location of data file
+train<-fread("~/master_glm.csv") #Assumed location of data file
 train<-train[race!="Unknown" & sex!="Unknown"]
 train<-train[,race:=ifelse(race=="International", "Other", race)]
 
@@ -370,7 +385,7 @@ plot_grid(gg1, gg2, rel_widths = c(3.5,1))
 ```
 
 
-We begin by visualizing the collected dropout data as seen in Figure \ref{fig:comboplots)} We see that we are treating gender as a factor, for which we will assume only two levels. Race is also a factor, which we will treat as having six levels: White, Asian, Black, Hispanic, Native American, and Other Minorities. Note that the other minority group also contains the category international, which was included in the MIDFIELD dataset but regrouped to other minorities for this analysis. It is also worth considering the wide variety in sample size between the different categories, with White having an overwhelming majority and Native American having only barely enough to be considered as an individual category.   
+We begin by visualizing the collected dropout data as seen in Figure 6. We see that we are treating gender as a factor, for which we will assume only two levels. Race is also a factor, which we will treat as having six levels: White, Asian, Black, Hispanic, Native American, and Other Minorities. Note that the other minority group also contains the category international, which was included in the MIDFIELD dataset but regrouped to other minorities for this analysis. It is also worth considering the wide variety in sample size between the different categories, with White having an overwhelming majority and Native American having only barely enough to be considered as an individual category.   
 
 Considering this visualization relative to our subject, we see that females and several minority groups appear to be overall underrepresented in this data. Females also appear to generally have higher numbers of dropouts relative to population size for most races.
 
@@ -606,7 +621,9 @@ options("contrasts" = c("contr.sum","contr.poly"))
 midfieldM1 <- lme4::lmer(p ~ tp + (1| inst), data = df2)
 ```
 
-```{r normality, echo=FALSE}
+##Normality
+
+```{r normality, echo=FALSE, fig.cap="Normal Quantile Plot (Residuals) for Original MIDFIELD Data", fig.height = 4, fig.width = 5, fig.show = 'hold'}
 anovaFE <- car::qqPlot(
   x = residuals(midfieldM1),
   distribution = "norm",
@@ -616,10 +633,10 @@ anovaFE <- car::qqPlot(
   pch = 19
 )
 ```
-
-  Looking at the Normal Quantile Plot of the original data's residuals above, We quickly notice a large positive skew in our residuals. Due to the large amount of values existing outside of our 90% confidence envelope, we can interpret that our residuals do not appear to normally distributed.  This lack of normality is a sign that a potential transformation of the data would be sufficient.
-
-```{r normalityRE, echo=FALSE}
+  
+Looking at the Normal Quantile Plot of the original data's residuals above in Figure 7, We quickly notice a large positive skew in our residuals. Due to the large amount of values existing outside of our 90% confidence envelope, we can interpret that our residuals do not appear to normally distributed.  This lack of normality is a sign that a potential transformation of the data would be sufficient.
+  
+```{r normalityRE, echo=FALSE, fig.cap="Normal Quantile Plot (Random Effects) for Original MIDFIELD Data", fig.height = 4, fig.width = 5, fig.show = 'hold'}
 anovaRE <- car::qqPlot(
   x = lme4::ranef(midfieldM1)$inst[, "(Intercept)"],
   distribution = "norm",
@@ -630,15 +647,17 @@ anovaRE <- car::qqPlot(
 )
 ```
 
-  Upon analysis of the Normal Quantile plot for our original data's random effects, we see a potentially troublesome data point within the plot. More specifically, there seems to a potential outlier represented the the top right of our plot. Since this value is outside of 90% confidence envelope, we assume that the normality of our random effects is not satisfied. Due to the lack of robustness within a random effects model, even slight deviances to normality such as the one we faced above can not be tolerated by the ANOVA model.
+Upon analysis of the Normal Quantile plot for our original data's random effects (see Figure 8 above), we see a potentially troublesome data point within the plot. More specifically, there seems to a potential outlier represented the the top right of our plot. Since this value is outside of 90% confidence envelope, we assume that the normality of our random effects is not satisfied. Due to the lack of robustness within a random effects model, even slight deviances to normality such as the one we faced above can not be tolerated by the ANOVA model.
 
-```{r homoscedasticity, echo=FALSE}
+##Homoscedasticity
+
+```{r homoscedasticity, echo=FALSE, fig.cap="Tukey-Anscombe Plot of Original MIDFIELD Data", fig.height = 4, fig.width = 5, fig.show = 'hold'}
 plot(midfieldM1, which = 1, pch = 19, xlab = "Fitted Values", ylab = "Residuals")
 ```
 
-  Finally, we take a look at the Tukey-Anscombe plot above in order to interpret our assumption of homoscedasticity. Looking at the plot, we notice a fanning pattern present within our residuals. Due to the lack of robustness within our model, we have decided to conclude that our residuals appear to not be homoscedastic.
+Finally, we take a look at the Tukey-Anscombe plot in Figure 9 in order to interpret our assumption of homoscedasticity. Looking at the plot, we notice a fanning pattern present within our residuals. Due to the lack of robustness within our model, we have decided to conclude that our residuals appear to not be homoscedastic.
 
-  Due to all the issues present when checking the assumptions for our model, we felt it neccessary to transform the original data.  Upon several trials with different transformations, we decided that a log-transformation appeared to fit the most appropriately with our data.
+Due to all the issues present when checking the assumptions for our model, we felt it neccessary to transform the original data.  Upon several trials with different transformations, we decided that a log-transformation appeared to fit the most appropriately with our data.
 
 \newpage
 #Appendix C: Modified Logistic Regression Models
@@ -646,7 +665,7 @@ In the assumption testing of our data, we recognized some issues with the linear
 
 ```{r plotprepc, echo=FALSE, include=FALSE}
 # Reread data for Appendix C model 1
-train<-fread("master_glm.csv")
+train<-fread("~/master_glm.csv")
 train<-train[,race:=ifelse(race=="International", "Other", race)]
 train<-train[,race:=ifelse(race=="Native American", "Other", race)]
 train$sex<-as.factor(train$sex)
@@ -726,7 +745,7 @@ In an effort to better meet the linearity of independent observations and log od
 
 ```{r plotprepc2, echo=FALSE, include=FALSE}
 # Reread data for Appendix C model 2
-train<-fread("master_glm.csv")
+train<-fread("~/master_glm.csv")
 train<-train[,race:=ifelse(race=="International", "Other", race)]
 train<-train[,race:=ifelse(race=="Native American", "Other", race)]
 train<-train[,race:=ifelse(race=="Hispanic", "Other", race)]
