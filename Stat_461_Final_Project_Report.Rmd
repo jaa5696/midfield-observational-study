@@ -51,6 +51,25 @@ degree using race and gender as predictors.
 
 #Exploring the Change in the Proportion of Women Graduates in STEM Majors over Time
 
+Our first analysis will be exploring is whether the proportion of women pursuing STEM degrees has change throughout the years. In order to do this, we will begin by discussing our study design strategies. 
+
+##Methods
+###Study Design
+In our study, the response will be the proportion of women graduating with STEM degrees, and the 
+measurement units will be 10 institutions given in the MIDFIELD database. Because the treatments 
+are applied to the institutions, the 10 institutions are also the experimental units. The factor 
+is each year between 1994 and 2003 which means there are 10 treatment levels. We chose the time 
+period 1994 – 2003 because the availability of data was best during this period and would produce
+the most accurate information about the differences between school years. Because we are using an 
+in-subject repeated measures design, the block will be the same as the subject, the institution.
+
+The institutions that we got the data about the proportion of women in STEM from were
+randomly chosen for each year. Each institution randomly selected a subset of its population,
+and we measured the proportion of women in that population. It is relevant to note that the
+number of institutions measured differs per year so there is not an even distribution of data
+points. Although the institutions were randomized to account for this fact, it does provide a
+potential source of error/inaccuracy of the model in our ANOVA analysis.
+
 ##Discussion of Models
 The Hasse Diagram is given in Figure 1. We are using the school year as the treatment while blocking on institutions. 
 
@@ -75,33 +94,13 @@ H_0:\;\text{ There is a statistically significant difference in the proportion o
 H_A:\;\text{ Not }H_0 
 \end{align*}
 
-Where $Y_{ij}$ represents the proportion of women in STEM during time period i receiving treatment
-j
-
-##Methods
-###Study Design
-In our study, the response will be the proportion of women graduating with STEM degrees, and the 
-measurement units will be 10 institutions given in the MIDFIELD database. Because the treatments 
-are applied to the institutions, the 10 institutions are also the experimental units. The factor 
-is each year between 1994 and 2003 which means there are 10 treatment levels. We chose the time 
-period 1994 – 2003 because the availability of data was best during this period and would produce
-the most accurate information about the differences between school years. Because we are using an 
-in-subject repeated measures design, the block will be the same as the subject, the institution.
-
-The institutions that we got the data about the proportion of women in STEM from were
-randomly chosen for each year. Each institution randomly selected a subset of its population,
-and we measured the proportion of women in that population. It is relevant to note that the
-number of institutions measured differs per year so there is not an even distribution of data
-points. Although the institutions were randomized to account for this fact, it does provide a
-potential source of error/inaccuracy of the model in our ANOVA analysis.
-
 ###Type I Error Rate
 We have decided that we will control Experimentwise Error Rate at 10% (\(\mathcal{E}_{I}=0.10\)) for both
 components of our study (ANOVA and Logistic Regression portions). Given the low-stakes
 nature of our study, we believed it was reasonable to use a more liberal Type I Error control
 method. Having a Type I Error would not cause a significant impact nor incur overwhelming
 costs, so having a low evidentiary requirement is justified. We plan to control EER with the
-Protected LSD method.
+Protected LSD method. We also plan to set our unusualness threshold at the same level as our Type I Error Rate (*UT* = 0.10).
 
 ##Exploring the Data
 ###Attributes
