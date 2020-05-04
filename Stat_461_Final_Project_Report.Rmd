@@ -178,9 +178,9 @@ kableExtra::kable_styling(bootstrap_options = c("striped", "condensed"),
 
 
 Table 1 gives the values of various descriptive statistics for the proportion of women pursuing STEM 
-degrees by time periods. From the table, we can observe that the sample arithmetic means range from 
+degrees by time periods. From the table, we can observe that the value of the sample arithmetic means range from 
 0.31 – 0.38 which indicates that the means are very similar to each other. The year with the lowest 
-proportion of women in STEM is 1998 and the year with the highest proportion is 2002. The sample 
+proportion of women in STEM is 1998 and the year with the highest proportion is 2002. The value of the sample 
 arithmetic variance is also very small across all the years. The sample skewness values vary across 
 the years which indicate that there may exist some outlier cases. The graphs shown above outline 
 some of the years with outlier cases. 
@@ -196,7 +196,8 @@ midfieldLogM1 <- lme4::lmer(logp ~ tp + (1| inst), data = df2)
 
 ###Normality of Residuals and Random Effects
 
-```{r logNormality, echo=FALSE}
+```{r logNormality, note=FALSE, echo=FALSE}
+suppressMessages(library('car'))
 anovaFE <- car::qqPlot(
   x = residuals(midfieldLogM1),
   distribution = "norm",
@@ -246,7 +247,7 @@ ggplot2::ggplot(data = df2,
 
 ##Multivariate Omnibus Results
 
-```{r multiV, echo=FALSE}
+```{r multiV, warning=FALSE, echo=FALSE}
 df2Wide <- tidyr::pivot_wider(df2,id_cols = inst, names_from = tp, values_from = logp)
 responseWide <- as.matrix(df2Wide[ , 2:11])
 midfieldMV <- lm(responseWide ~ 1)
