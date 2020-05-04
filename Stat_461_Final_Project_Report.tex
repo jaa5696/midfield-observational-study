@@ -302,13 +302,14 @@ Year & Sample.Max & Q3 & Sample.Median & Q1 & Sample.Min & SAM & SAV & Sample.Sk
 
 Table 1 gives the values of various descriptive statistics for the
 proportion of women pursuing STEM degrees by time periods. From the
-table, we can observe that the sample arithmetic means range from 0.31
--- 0.38 which indicates that the means are very similar to each other.
-The year with the lowest proportion of women in STEM is 1998 and the
-year with the highest proportion is 2002. The sample arithmetic variance
-is also very small across all the years. The sample skewness values vary
-across the years which indicate that there may exist some outlier cases.
-The graphs shown above outline some of the years with outlier cases.
+table, we can observe that the values of the sample arithmetic mean
+range from 0.31 -- 0.38 which indicates that the means are very similar
+to each other. The year with the lowest proportion of women in STEM is
+1998 and the year with the highest proportion is 2002. The value of the
+sample arithmetic variance is also very small across all the years. The
+sample skewness values vary across the years which indicate that there
+may exist some outlier cases. The graphs shown above outline some of the
+years with outlier cases.
 
 \subsection{ANOVA Assumption Testing}\label{anova-assumption-testing}
 
@@ -382,6 +383,9 @@ satisfied.
 
 \includegraphics{Stat_461_Final_Project_Report_files/figure-latex/logInteraction-1.pdf}
 
+\subsection{Multivariate Omnibus
+Results}\label{multivariate-omnibus-results}
+
 In order to use our ANOVA model, we must check for a lack of interaction
 between our subjects. Using the interaction plots above, we are given
 the individual plots for the log-proportion of women graduating in STEM
@@ -411,11 +415,12 @@ Term\_Year & 0 & 0.019\\
 Lastly, we will be using the results from Mauchly's test of Sphericity
 in order to determine if our repeated measures are compoundly
 symmetrical. Upon analysis of Table 2 above, we see that we acheived a
-\emph{p}-value of 0.019. Comparing our p-value to our Type I Error Rate
-of 0.1, we determine that our p-value is much less than our error rate.
-THus, we will decide that our data violates the assumption of
-sphericity. We will proceed with our omnibus testing, however we will
-include adjustments methods to combat our violation of sphericity.
+\emph{p}-value of 0.019. Comparing our \emph{p}-value to our Type I
+Error Rate of 0.1, we determine that our \emph{p}-value is much less
+than our error rate. THus, we will decide that our data violates the
+assumption of sphericity. We will proceed with our omnibus testing,
+however we will include adjustments methods to combat our violation of
+sphericity.
 
 \subsection{Omnibus Results}\label{omnibus-results}
 
@@ -1134,7 +1139,15 @@ model.
 \StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{color =} \StringTok{"Institution"}\NormalTok{) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{legend.position=}\StringTok{"top"}\NormalTok{) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{scale_x_discrete}\NormalTok{(}\DataTypeTok{breaks=}\KeywordTok{seq}\NormalTok{(}\DecValTok{1994}\NormalTok{, }\DecValTok{2002}\NormalTok{, }\DecValTok{2}\NormalTok{))}
+\NormalTok{df2Wide <-}\StringTok{ }\NormalTok{tidyr}\OperatorTok{::}\KeywordTok{pivot_wider}\NormalTok{(df2,}\DataTypeTok{id_cols =}\NormalTok{ inst, }\DataTypeTok{names_from =}\NormalTok{ tp, }\DataTypeTok{values_from =}\NormalTok{ logp)}
+\NormalTok{responseWide <-}\StringTok{ }\KeywordTok{as.matrix}\NormalTok{(df2Wide[ , }\DecValTok{2}\OperatorTok{:}\DecValTok{11}\NormalTok{])}
+\NormalTok{midfieldMV <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(responseWide }\OperatorTok{~}\StringTok{ }\DecValTok{1}\NormalTok{)}
+\NormalTok{Term_Year <-}\StringTok{ }\KeywordTok{factor}\NormalTok{(}\KeywordTok{levels}\NormalTok{(df2}\OperatorTok{$}\NormalTok{tp))}
 
+\NormalTok{outputMV <-}\StringTok{ }\NormalTok{car}\OperatorTok{::}\KeywordTok{Anova}\NormalTok{(midfieldMV, }\DataTypeTok{idata =} \KeywordTok{data.frame}\NormalTok{(Term_Year),}
+\DataTypeTok{idesign =} \OperatorTok{~}\NormalTok{Term_Year, }\DataTypeTok{type =} \StringTok{"III"}\NormalTok{)}
+ 
+\NormalTok{midfieldMultivariate <-}\StringTok{ }\KeywordTok{summary}\NormalTok{(outputMV, }\DataTypeTok{multivariate=}\OtherTok{FALSE}\NormalTok{)}
 \KeywordTok{options}\NormalTok{(}\DataTypeTok{knitr.kable.NA=} \StringTok{""}\NormalTok{)}
 \NormalTok{knitr}\OperatorTok{::}\KeywordTok{kable}\NormalTok{(}
   \KeywordTok{data.frame}\NormalTok{(}\KeywordTok{unclass}\NormalTok{(midfieldMultivariate}\OperatorTok{$}\NormalTok{sphericity.tests)),}
@@ -1370,7 +1383,8 @@ model.
 \StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{color=}\StringTok{"Number of Observations"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
 \StringTok{  }\KeywordTok{theme_bw}\NormalTok{()}\OperatorTok{+}
 \StringTok{  }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{panel.border =} \KeywordTok{element_blank}\NormalTok{(), }\DataTypeTok{panel.grid.major =} \KeywordTok{element_blank}\NormalTok{(),}
-        \DataTypeTok{panel.grid.minor =} \KeywordTok{element_blank}\NormalTok{(), }\DataTypeTok{axis.line =} \KeywordTok{element_line}\NormalTok{(}\DataTypeTok{colour =} \StringTok{"black"}\NormalTok{))}
+        \DataTypeTok{panel.grid.minor =} \KeywordTok{element_blank}\NormalTok{(), }\DataTypeTok{axis.line =} \KeywordTok{element_line}\NormalTok{(}\DataTypeTok{colour =} \StringTok{"black"}\NormalTok{))}\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Dropout rates compared by race and gender"}\NormalTok{)}
 
 \CommentTok{# Run logistic regression model}
 \NormalTok{train}\OperatorTok{$}\NormalTok{sex<-}\KeywordTok{as.factor}\NormalTok{(train}\OperatorTok{$}\NormalTok{sex)}
@@ -1432,7 +1446,8 @@ model.
 \StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{color=}\StringTok{"Number of Observations"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
 \StringTok{  }\KeywordTok{theme_bw}\NormalTok{()}\OperatorTok{+}
 \StringTok{  }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{panel.border =} \KeywordTok{element_blank}\NormalTok{(), }\DataTypeTok{panel.grid.major =} \KeywordTok{element_blank}\NormalTok{(),}
-        \DataTypeTok{panel.grid.minor =} \KeywordTok{element_blank}\NormalTok{(), }\DataTypeTok{axis.line =} \KeywordTok{element_line}\NormalTok{(}\DataTypeTok{colour =} \StringTok{"black"}\NormalTok{))}
+        \DataTypeTok{panel.grid.minor =} \KeywordTok{element_blank}\NormalTok{(), }\DataTypeTok{axis.line =} \KeywordTok{element_line}\NormalTok{(}\DataTypeTok{colour =} \StringTok{"black"}\NormalTok{))}\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Dropout rates compared by race and gender"}\NormalTok{)}
 
 \CommentTok{# Fit logistic regression model}
 \NormalTok{train}\OperatorTok{$}\NormalTok{sex<-}\KeywordTok{as.factor}\NormalTok{(train}\OperatorTok{$}\NormalTok{sex)}

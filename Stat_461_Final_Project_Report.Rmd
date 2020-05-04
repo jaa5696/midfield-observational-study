@@ -53,8 +53,7 @@ question is: How has the proportion of women pursuing STEM degrees changed over 
 Additionally, we want to observe how race and gender affects how well the course Calculus I acts 
 as a “weed-out” class. Namely, how does race and gender affect the rate of students deciding to 
 quit pursuing a STEM field and pursue something different after taking Calculus I? To do this, 
-we will look at the number of students who have dropped out of a STEM degree shortly following Calc I as compared to the total number of students who have taken Calc I. By using 
-a logistic regression model, we will model the probability of a student dropping out of a STEM 
+we will look at the number of students who have dropped out of a STEM degree shortly following Calc I as compared to the total number of students who have taken Calc I. By using a logistic regression model, we will model the probability of a student dropping out of a STEM 
 degree using race and gender as predictors. 
 
 #Exploring the Change in the Proportion of Women Graduates in STEM Majors over Time
@@ -89,10 +88,10 @@ AMat[1, c(2:4)] = AMat[c(2:3), 4] = T
 hasseDiagram::hasse(AMat, ALabs)
 ```
 
+
 As explained above, we will use ANOVA to conduct the analysis. After analyzing the Hasse diagram found in Figure \ref{fig:hasse}, we decided the best model to use for our study is a One Way Repeated Measures (Within-Subjects) ANOVA Model.  This method is effective because we can observe if there are statistically significant differences in the sample arithmetic means between each school year. This will also allow to reduce the amount of subject-to-subject variation present within our model by applying each "year treatment" to each individual institution. If we were to find evidence to reject the null hypothesis that there is no statistically significant difference between the sample arithmetic means, we could then conduct post-hoc analysis to determine if later years caused the proportion of women in STEM to increase. The null and alternative hypothesis are formally expressed below. 
 
 INSERT HYPOTHESIS CORRECTLY
-
 
 ###Type I Error Rate
 We have decided that we will control Experimentwise Error Rate at 10% (\(\mathcal{E}_{I}=0.10\)) for both
@@ -103,10 +102,7 @@ costs, so having a low evidentiary requirement is justified. The EER will be nat
 
 ##Exploring the Data
 ###Attributes
-There are two attributes we are concerned about in this study: the time periods in which we are
-interested and the proportion of women pursuing STEM. Because the question we are interested
-in is the change in the proportion of women over time, graphing the data will provide some
-general useful insights.
+There are two attributes we are concerned about in this study: the time periods in which we are interested and the proportion of women pursuing STEM. Because the question we are interested in is the change in the proportion of women over time, graphing the data will provide some general useful insights.
 
 ```{r dataprep, echo=FALSE, include=FALSE}
 m_f<-read.csv("~/master_anova.csv")
@@ -146,14 +142,7 @@ boxplot(p~tp,
         main = "Boxplot of Women in STEM")
 ```
 
-Figure \ref{fig:strip} gives plots of the data for all institutions over the entire time period. Both 
-plots appear to indicate that he majority of institutions had a proportion of women between 
-0.2 – 0.5. Given that, it does not appear that there are any significant changes between years. 
-While it does look like there are some differences between years, there is no clear upward/downward 
-pattern that the data displays as the years increase. This would suggest that as time went on, 
-the proportion of women in STEM had not increased significantly during the period of 1994 – 2003 
-and that there are not statistically significant differences in the sample arithmetic means 
-between the years. ANOVA analysis will provide greater insight into these details.
+Figure \ref{fig:strip} gives plots of the data for all institutions over the entire time period. Both plots appear to indicate that he majority of institutions had a proportion of women between 0.2 – 0.5. Given that, it does not appear that there are any significant changes between years. While it does look like there are some differences between years, there is no clear upward/downward pattern that the data displays as the years increase. This would suggest that as time went on, the proportion of women in STEM had not increased significantly during the period of 1994 – 2003 and that there are not statistically significant differences in the sample arithmetic means between the years. ANOVA analysis will provide greater insight into these details.
 
 ```{r kabtab, echo=FALSE}
 #getStats <- function(df2)
@@ -192,9 +181,9 @@ kableExtra::kable_styling(bootstrap_options = c("striped", "condensed"),
 
 
 Table 1 gives the values of various descriptive statistics for the proportion of women pursuing STEM 
-degrees by time periods. From the table, we can observe that the sample arithmetic means range from 
+degrees by time periods. From the table, we can observe that the values of the sample arithmetic mean range from 
 0.31 – 0.38 which indicates that the means are very similar to each other. The year with the lowest 
-proportion of women in STEM is 1998 and the year with the highest proportion is 2002. The sample 
+proportion of women in STEM is 1998 and the year with the highest proportion is 2002. The value of the sample 
 arithmetic variance is also very small across all the years. The sample skewness values vary across 
 the years which indicate that there may exist some outlier cases. The graphs shown above outline 
 some of the years with outlier cases. 
@@ -274,7 +263,20 @@ ggplot(data = df2,
   labs(color = "Institution") +
   theme(legend.position="top") +
   scale_x_discrete(breaks=seq(1994, 2002, 2))
+```
 
+##Multivariate Omnibus Results
+
+```{r multiV2, warning=FALSE, echo=FALSE}
+df2Wide <- tidyr::pivot_wider(df2,id_cols = inst, names_from = tp, values_from = logp)
+responseWide <- as.matrix(df2Wide[ , 2:11])
+midfieldMV <- lm(responseWide ~ 1)
+Term_Year <- factor(levels(df2$tp))
+
+outputMV <- car::Anova(midfieldMV, idata = data.frame(Term_Year),
+idesign = ~Term_Year, type = "III")
+ 
+midfieldMultivariate <- summary(outputMV, multivariate=FALSE)
 ```
 
 
@@ -300,7 +302,7 @@ kableExtra::footnote(
 
 ```
 
-Lastly, we will be using the results from Mauchly's test of Sphericity in order to determine if our repeated measures are compoundly symmetrical.  Upon analysis of Table 2 above, we see that we acheived a *p*-value of 0.019.  Comparing our p-value to our Type I Error Rate of 0.1, we determine that our p-value is much less than our error rate. THus, we will decide that our data violates the assumption of sphericity. We will proceed with our omnibus testing, however we will include adjustments methods to combat our violation of sphericity.
+Lastly, we will be using the results from Mauchly's test of Sphericity in order to determine if our repeated measures are compoundly symmetrical.  Upon analysis of Table 2 above, we see that we acheived a *p*-value of 0.019.  Comparing our *p*-value to our Type I Error Rate of 0.1, we determine that our *p*-value is much less than our error rate. THus, we will decide that our data violates the assumption of sphericity. We will proceed with our omnibus testing, however we will include adjustments methods to combat our violation of sphericity.
 
 ##Omnibus Results
 
@@ -384,9 +386,8 @@ gg2<-ggplot(data=trainp, aes(x=sex, fill = as.factor(dropout))) +
 plot_grid(gg1, gg2, rel_widths = c(3.5,1))
 ```
 
-
 We begin by visualizing the collected dropout data as seen in Figure 6. We see that we are treating gender as a factor, for which we will assume only two levels. Race is also a factor, which we will treat as having six levels: White, Asian, Black, Hispanic, Native American, and Other Minorities. Note that the other minority group also contains the category international, which was included in the MIDFIELD dataset but regrouped to other minorities for this analysis. It is also worth considering the wide variety in sample size between the different categories, with White having an overwhelming majority and Native American having only barely enough to be considered as an individual category.   
-
+  
 Considering this visualization relative to our subject, we see that females and several minority groups appear to be overall underrepresented in this data. Females also appear to generally have higher numbers of dropouts relative to population size for most races.
 
 ##Assumption Testing
@@ -697,7 +698,8 @@ ggplot(aes(x=race, y=sex, color=n), data=trainp3) +
   labs(color="Number of Observations") + 
   theme_bw()+
   theme(panel.border = element_blank(), panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+        panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))+
+  ggtitle("Dropout rates compared by race and gender")
 
 ```
 As we could have predicted, the result still has some issues with the Other Minorities and Hispanic categories in that they each have a higher male proportion of female dropouts. The remainder of the analysis remains similar.
@@ -770,7 +772,7 @@ trainp3$race<-factor(trainp2$race, levels=c("Asian", "White", "Black", "Other"))
 
 ```
 
-```{r secondplot3, echo=FALSE, fig.height=2, fig.cap="Dropout rates compared by race and gender"}
+```{r secondplot3, echo=FALSE, fig.height=2}
 #Create dropout rate plot
 ggplot(aes(x=race, y=sex, color=n), data=trainp3) + 
   geom_text(aes(label=round(drop_rate, digits=2)), size=6) + 
@@ -778,7 +780,8 @@ ggplot(aes(x=race, y=sex, color=n), data=trainp3) +
   labs(color="Number of Observations") + 
   theme_bw()+
   theme(panel.border = element_blank(), panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+        panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))+
+  ggtitle("Dropout rates compared by race and gender")
 
 ```
 Similar to the last case, the result is similar, with now only Other Minorities presenting mild issues to our assumption. The rest of analysis proceeds similarly with the test results shown below.
