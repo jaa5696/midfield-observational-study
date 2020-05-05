@@ -58,7 +58,7 @@ degree using race and gender as predictors.
 
 #Exploring the Change in the Proportion of Women Graduates in STEM Majors over Time
 
-Our first analysis will be exploring is whether the proportion of women pursuing STEM degrees has change throughout the years. In order to do this, we will begin by discussing our study design strategies. 
+Our first analysis will be exploring whether the proportion of women pursuing STEM degrees has change throughout the years. In order to do this, we will begin by discussing our study design strategies. 
 
 ##Methods
 ###Study Design
@@ -80,7 +80,7 @@ potential source of error/inaccuracy of the model in our ANOVA analysis.
 ##Discussion of Models
 The Hasse Diagram is given in Figure \ref{fig:hasse}. We are using the school year as the treatment while blocking on institutions. 
 
-```{r hasse, echo=FALSE, fig.cap="Hasse Diagram", fig.align='center', fig.height=4, fig.width=4}
+```{r hasse, echo=FALSE, fig.cap="Hasse Diagram of MIDFIELD (ANOVA) Study", fig.align='center', fig.height=4, fig.width=4}
 ALabs <- c("1 Grand Mean 1", "10 Year 9",
               "10 (Institution) 9", " 100 (Error) 81")
 AMat <- matrix(data = F, nrow = 4, ncol = 4)
@@ -91,7 +91,7 @@ hasseDiagram::hasse(AMat, ALabs)
 
 As explained above, we will use ANOVA to conduct the analysis. After analyzing the Hasse diagram found in Figure \ref{fig:hasse}, we decided the best model to use for our study is a One Way Repeated Measures (Within-Subjects) ANOVA Model.  This method is effective because we can observe if there are statistically significant differences in the sample arithmetic means between each school year. This will also allow to reduce the amount of subject-to-subject variation present within our model by applying each "year treatment" to each individual institution. If we were to find evidence to reject the null hypothesis that there is no statistically significant difference between the sample arithmetic means, we could then conduct post-hoc analysis to determine if later years caused the proportion of women in STEM to increase. The null and alternative hypothesis are formally expressed below. 
 
-
+$\\$
 $H_0$: There is no statistically significant difference in the proportion of women graduating
 with STEM degrees within our collection of institutions due to the term year.
 
@@ -303,7 +303,7 @@ kableExtra::footnote(
 
 ```
 
-Lastly, we will be using the results from Mauchly's test of Sphericity in order to determine if our repeated measures are compoundly symmetrical.  Upon analysis of Table 2 above, we see that we acheived a *p*-value of 0.019.  Comparing our *p*-value to our Type I Error Rate of 0.1, we determine that our *p*-value is much less than our error rate. THus, we will decide that our data violates the assumption of sphericity. We will proceed with our omnibus testing, however we will include adjustments methods to combat our violation of sphericity.
+Lastly, we will be using the results from Mauchly's test of Sphericity in order to determine if our repeated measures are compoundly symmetrical.  Upon analysis of Table 2 above, we see that we acheived a *p*-value of 0.019.  Comparing our *p*-value to our Type I Error Rate of 0.1, we determine that our *p*-value is much less than our error rate. Thus, we will decide that our data violates the assumption of sphericity. We will proceed with our omnibus testing, however we will include adjustments methods to combat our violation of sphericity.
 
 ##Omnibus Results
 
@@ -450,6 +450,7 @@ Therefore, aside from a small linearity issue that we will continue to acknowled
 ##Developing the Model
 In developing the logistic regression model, we will use a baseline of a white male. The resulting model is shown in the below table.
 
+\clearpage
 
 ```{r odds_ratios, echo=FALSE, warning=FALSE, out.width=".49\\linewidth", fig.show="hold"}
 # Calculate Odds Ratios
@@ -473,7 +474,7 @@ knitr::kable(
 ```
 
 
-Based on our test and the p values it produced, the only significant terms are gender, the Native American race, and Other Minority races. The p value for the impact of race rounds to 0 in the table, implying that assuming the null hypothesis we would expect to see results at least as extreme as we did nearly none of the time. Similarly, for the Native American group, we would expect to see results this extreme only .2% of the time and for the other minority groups we would expect to see a value this extreme only 4.9% of the time. Their odds ratios, which are set using the white man as a baseline, then tell us how much more likely these students are to drop out. For example, a randomly selected female is predicted to be 1.217 times more likely to drop out than randomly selected male from the population and a randomly selected Native American is predicted to be over twice as likely to drop out after introductory calculus compared to a randomly selected White student. This tells us that our data suggests that gender does influence the impact of introductory calculus as a weed out course with significance. Race, however, only statistically significantly affects the dropout rate after calculus 1 for students of Native American heritage and those from races that did not fall into any of the given categories. We should point out, however, that the Native American group was the smallest group, containing only approximately 60 total students, and contained some assumption issues, so the result should be taken with caution. Similarly the group of Other Minorities, most likely contains a rather diverse group of students and therefore is difficult to interpret entirely on its own. Similarly, recall that the groups Hispanic and Native American followed a slightly different pattern in our assumptions check, so we must be cautious on assertions we make about these groups, both in the effects of race and gender. Note, however, that the results remain consistent even when these groups are merged into the Other category, the results of which are shown in Appendix C.
+Based on our test and the p values it produced, the only significant terms are gender, the Native American race, and Other Minority races. The *p*-value for the impact of race rounds to 0 in the table, implying that assuming the null hypothesis we would expect to see results at least as extreme as we did nearly none of the time. Similarly, for the Native American group, we would expect to see results this extreme only 0.2% of the time, and for the other minority groups we would expect to see a value this extreme only 4.9% of the time. Their odds ratios, which are set using the white man as a baseline, then tell us how much more likely these students are to drop out. For example, a randomly selected female is predicted to be 1.217 times more likely to drop out than randomly selected male from the population, and a randomly selected Native American is predicted to be over twice as likely to drop out after introductory calculus compared to a randomly selected White student. This tells us that our data suggests that gender does influence the impact of introductory calculus as a weed out course with significance. Race, however, only statistically significantly affects the dropout rate after calculus 1 for students of Native American heritage and those from races that did not fall into any of the given categories. We should point out, however, that the Native American group was the smallest group, containing only approximately 60 total students, and contained some assumption issues, so the result should be taken with caution. Similarly the group of Other Minorities, most likely contains a rather diverse group of students and therefore is difficult to interpret entirely on its own. Similarly, recall that the groups Hispanic and Native American followed a slightly different pattern in our assumptions check, so we must be cautious on assertions we make about these groups, both in the effects of race and gender. Note, however, that the results remain consistent even when these groups are merged into the Other category, the results of which are shown in Appendix C.
 
 We can also view the predicted probability of dropping out by race and gender in the below table.
 
@@ -529,7 +530,7 @@ knitr::kable(effsize,
 
 ```
 
-McFadden's and Coxsnell's statistics suggest that the model explains .3% of the variation while Nagelkerke's suggests that the model explains .5% of the variation. While this may seem like a very small amount, keep in mind that we are attempting to predict dropout rates based solely on race and gender. We would not expect, and certainly not hope, that these factors would explain a large amount of variation in dropout rates nor was that the intended purpose of our analysis. It is also worth noting that using a likelihood ratio test and chi$^2$ statistic, we get a p value of less than .0001, which implies that our model should still be considered statistically significant relative to the null model.
+McFadden's and Coxsnell's statistics suggest that the model explains 0.3% of the variation while Nagelkerke's suggests that the model explains 0.5% of the variation. While this may seem like a very small amount, keep in mind that we are attempting to predict dropout rates based solely on race and gender. We would not expect, and certainly not hope, that these factors would explain a large amount of variation in dropout rates nor was that the intended purpose of our analysis. It is also worth noting that using a likelihood ratio test and chi$^2$ statistic, we get a *p*-value of less than 0.0001, which implies that our model should be considered statistically significant relative to the null model and is much more relevant to our actual research question.
 
 
 #Discussion and Further Study
