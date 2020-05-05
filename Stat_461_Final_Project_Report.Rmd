@@ -29,6 +29,24 @@ library(psych)
 suppressMessages(library(car))
 ```
 
+#Executive Summary
+MIDFIELD, a database compiling population data from students from various different universities, 
+is a powerful resource that can be used to interpret patterns, trends, and observations about 
+college students. Because MIDFIELD gives a substantial amount of information related to a student’s 
+major, year of attendance, race, and gender, it enables statisticians to conduct research to gain 
+more information about college students, institutions, and curriculums. We decided to use the 
+MIDFIELD data both to answer the question of whether or not the proportion of women in STEM had 
+changed over the years and to create a model of how race and gender affect the dropout rate of 
+STEM majors after taking the course Calculus I. 
+
+For the ANOVA question, we decided to use a subsection of the data set including a time period of 1994 – 2003 
+with ten school institutions. By measuring the proportion of STEM students of women for each 
+institution, we were able to model the data using ANOVA and identify if there were statistically 
+significant differences between years. Based on our findings <Fill in Findings Here> 
+
+For the Linear Regression question, 
+
+
 #Introduction
 ##Background
 The Multiple-Institution Database for Investigating Engineering Longitudinal Development 
