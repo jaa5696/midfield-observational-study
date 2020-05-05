@@ -122,10 +122,51 @@
 
 \title{Analyzing Data from the MIDFIELD Project}
 \author{Javier Alvarez, Leah Hunt, and Joshua Kwak}
-\date{}
+\date{May 5, 2020}
 
 \begin{document}
 \maketitle
+
+\newpage
+
+\section{Executive Summary}\label{executive-summary}
+
+MIDFIELD, a database compiling population data from students from
+various different universities, is a powerful resource that can be used
+to interpret patterns, trends, and observations about college students.
+Because MIDFIELD gives a substantial amount of information related to a
+student's major, year of attendance, race, and gender, it enables
+statisticians to conduct research to gain more information about college
+students, institutions, and curriculums. We decided to use the MIDFIELD
+data both to answer the question of whether or not the proportion of
+women in STEM had changed over the years, and to create a logistic
+regression model of how race and gender affect the dropout rate of STEM
+majors after taking the course Calculus I.
+
+For the ANOVA question, we decided to use a subsection of the data set
+including a time period of 1994 -- 2003 with ten school institutions. By
+measuring the proportion of STEM students of women for each institution,
+we were able to model the data using ANOVA and identify if there were
+statistically significant differences between years. Based on our
+findings, we found that there was no significant differences in the the
+graduation rates of women in STEM fields based on the year of
+graduation. Within the report, we have provided insight regarding
+further studies of women within the STEM majors based on the results of
+the study.
+
+In order to explore the relationship of race and gender on the effects
+of introductory calculus on the rate of dropping out from the STEM
+field, we use the MIDFIELD data from nine of the institutions studied
+over the full timespan of the data to develop a logistic regression
+model. The model uses race and gender as predictors for a student's
+dropout probability, determined by considering the presence of the
+student in the STEM field in a period shortly after taking introductory
+calculus. We discuss results that indicate a stronger effect on females
+and some minority racial groups relative to the baseline of white men
+and indicate potential implicit biases in the current STEM education
+system.
+
+\newpage
 
 \section{Introduction}\label{introduction}
 
@@ -187,9 +228,10 @@ the institutions, the 10 institutions are also the experimental units.
 The factor is each year between 1994 and 2003 which means there are 10
 treatment levels. We chose the time period 1994 -- 2003 because the
 availability of data was best during this period and would produce the
-most accurate information about the differences between school years.
-Because we are using an in-subject repeated measures design, the block
-will be the same as the subject, the institution.
+most accurate information about the differences between school
+years\footnote{A more detailed description of our reasonings behind subsetting the original MIDFIELD data can be found in Appendix A.}.
+Because we are using a within-subjects repeated measures design, the
+block will be the same as the subject (the individual institutions).
 
 The institutions that we got the data about the proportion of women in
 STEM from were randomly chosen for each year. Each institution randomly
