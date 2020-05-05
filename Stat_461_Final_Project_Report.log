@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/W32TeX) (preloaded format=pdflatex 2020.5.4)  4 MAY 2020 16:38
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/W32TeX) (preloaded format=pdflatex 2020.5.4)  5 MAY 2020 00:01
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -723,7 +723,7 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 
 {c:/Users/Javier/AppData/Roaming/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdft
 ex.map}]
-<Stat_461_Final_Project_Report_files/figure-latex/hasse-1.pdf, id=136, 289.08pt
+<Stat_461_Final_Project_Report_files/figure-latex/hasse-1.pdf, id=132, 289.08pt
  x 289.08pt>
 File: Stat_461_Final_Project_Report_files/figure-latex/hasse-1.pdf Graphic file
  (type pdf)
@@ -739,136 +739,136 @@ has been already used, duplicate ignored
 l.230 
        <./Stat_461_Final_Project_Report_files/figure-latex/hasse-1.pdf>]
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 236.
+(Font)              <10> on input line 231.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 236.
+(Font)              <7> on input line 231.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 236.
-<Stat_461_Final_Project_Report_files/figure-latex/strip-1.pdf, id=149, 469.755p
+(Font)              <5> on input line 231.
+<Stat_461_Final_Project_Report_files/figure-latex/strip-1.pdf, id=145, 469.755p
 t x 325.215pt>
 File: Stat_461_Final_Project_Report_files/figure-latex/strip-1.pdf Graphic file
  (type pdf)
 <use Stat_461_Final_Project_Report_files/figure-latex/strip-1.pdf>
 Package pdftex.def Info: Stat_461_Final_Project_Report_files/figure-latex/strip
--1.pdf  used on input line 256.
+-1.pdf  used on input line 260.
 (pdftex.def)             Requested size: 230.18196pt x 159.35674pt.
-<Stat_461_Final_Project_Report_files/figure-latex/strip-2.pdf, id=150, 469.755p
+<Stat_461_Final_Project_Report_files/figure-latex/strip-2.pdf, id=146, 469.755p
 t x 325.215pt>
 File: Stat_461_Final_Project_Report_files/figure-latex/strip-2.pdf Graphic file
  (type pdf)
 <use Stat_461_Final_Project_Report_files/figure-latex/strip-2.pdf>
 Package pdftex.def Info: Stat_461_Final_Project_Report_files/figure-latex/strip
--2.pdf  used on input line 256.
+-2.pdf  used on input line 260.
 (pdftex.def)             Requested size: 230.18196pt x 159.35674pt.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <9> on input line 276.
+(Font)              <9> on input line 280.
 
-Overfull \hbox (4.11327pt too wide) in paragraph at lines 278--278
+Overfull \hbox (4.11327pt too wide) in paragraph at lines 282--282
  []|\T1/lmr/m/n/9 Sample.Median|
  []
 
 
-Overfull \hbox (11.15811pt too wide) in paragraph at lines 278--279
+Overfull \hbox (11.15811pt too wide) in paragraph at lines 282--283
  []|\T1/lmr/m/n/9 Sample.Skewness|
  []
 
 
-Overfull \hbox (3.00201pt too wide) in paragraph at lines 280--280
+Overfull \hbox (3.00201pt too wide) in paragraph at lines 284--284
  []|\T1/lmr/m/n/9 0.393|
  []
 
 
-Overfull \hbox (3.00201pt too wide) in paragraph at lines 280--280
+Overfull \hbox (3.00201pt too wide) in paragraph at lines 284--284
  []|\T1/lmr/m/n/9 0.217|
  []
 
 
-Overfull \hbox (3.00201pt too wide) in paragraph at lines 282--282
+Overfull \hbox (3.00201pt too wide) in paragraph at lines 286--286
  []|\T1/lmr/m/n/9 0.383|
  []
 
 
-Overfull \hbox (3.00201pt too wide) in paragraph at lines 282--282
+Overfull \hbox (3.00201pt too wide) in paragraph at lines 286--286
  []|\T1/lmr/m/n/9 0.290|
  []
 
 
-Overfull \hbox (3.00201pt too wide) in paragraph at lines 284--284
+Overfull \hbox (3.00201pt too wide) in paragraph at lines 288--288
  []|\T1/lmr/m/n/9 0.351|
  []
 
 
-Overfull \hbox (3.00201pt too wide) in paragraph at lines 284--284
+Overfull \hbox (3.00201pt too wide) in paragraph at lines 288--288
  []|\T1/lmr/m/n/9 0.213|
  []
 
 
-Overfull \hbox (3.00201pt too wide) in paragraph at lines 286--286
+Overfull \hbox (3.00201pt too wide) in paragraph at lines 290--290
  []|\T1/lmr/m/n/9 0.379|
  []
 
 
-Overfull \hbox (3.00201pt too wide) in paragraph at lines 286--286
+Overfull \hbox (3.00201pt too wide) in paragraph at lines 290--290
  []|\T1/lmr/m/n/9 0.250|
  []
 
 
-Overfull \hbox (3.00201pt too wide) in paragraph at lines 288--288
+Overfull \hbox (3.00201pt too wide) in paragraph at lines 292--292
  []|\T1/lmr/m/n/9 0.352|
  []
 
 
-Overfull \hbox (3.00201pt too wide) in paragraph at lines 288--288
+Overfull \hbox (3.00201pt too wide) in paragraph at lines 292--292
  []|\T1/lmr/m/n/9 0.275|
  []
 
 
-Overfull \hbox (3.00201pt too wide) in paragraph at lines 290--290
+Overfull \hbox (3.00201pt too wide) in paragraph at lines 294--294
  []|\T1/lmr/m/n/9 0.351|
  []
 
 
-Overfull \hbox (3.00201pt too wide) in paragraph at lines 290--290
+Overfull \hbox (3.00201pt too wide) in paragraph at lines 294--294
  []|\T1/lmr/m/n/9 0.282|
  []
 
 
-Overfull \hbox (3.00201pt too wide) in paragraph at lines 292--292
+Overfull \hbox (3.00201pt too wide) in paragraph at lines 296--296
  []|\T1/lmr/m/n/9 0.386|
  []
 
 
-Overfull \hbox (3.00201pt too wide) in paragraph at lines 292--292
+Overfull \hbox (3.00201pt too wide) in paragraph at lines 296--296
  []|\T1/lmr/m/n/9 0.281|
  []
 
 
-Overfull \hbox (3.00201pt too wide) in paragraph at lines 294--294
+Overfull \hbox (3.00201pt too wide) in paragraph at lines 298--298
  []|\T1/lmr/m/n/9 0.426|
  []
 
 
-Overfull \hbox (3.00201pt too wide) in paragraph at lines 294--294
+Overfull \hbox (3.00201pt too wide) in paragraph at lines 298--298
  []|\T1/lmr/m/n/9 0.338|
  []
 
 
-Overfull \hbox (3.00201pt too wide) in paragraph at lines 296--296
+Overfull \hbox (3.00201pt too wide) in paragraph at lines 300--300
  []|\T1/lmr/m/n/9 0.393|
  []
 
 
-Overfull \hbox (3.00201pt too wide) in paragraph at lines 296--296
+Overfull \hbox (3.00201pt too wide) in paragraph at lines 300--300
  []|\T1/lmr/m/n/9 0.290|
  []
 
 
-Overfull \hbox (3.00201pt too wide) in paragraph at lines 298--298
+Overfull \hbox (3.00201pt too wide) in paragraph at lines 302--302
  []|\T1/lmr/m/n/9 0.363|
  []
 
 
-Overfull \hbox (3.00201pt too wide) in paragraph at lines 298--298
+Overfull \hbox (3.00201pt too wide) in paragraph at lines 302--302
  []|\T1/lmr/m/n/9 0.257|
  []
 
@@ -877,7 +877,7 @@ has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.302 
+l.306 
        <./Stat_461_Final_Project_Report_files/figure-latex/strip-1.pdf> <./Stat
 _461_Final_Project_Report_files/figure-latex/strip-2.pdf>] [4pdfTeX warning (ex
 t4): destination with the same identifier (name{table.1}) has been already used
@@ -885,23 +885,23 @@ t4): destination with the same identifier (name{table.1}) has been already used
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.330 \clearpage
+l.334 \clearpage
                 ]
-<Stat_461_Final_Project_Report_files/figure-latex/logNormality-1.pdf, id=186, 3
+<Stat_461_Final_Project_Report_files/figure-latex/logNormality-1.pdf, id=183, 3
 61.35pt x 289.08pt>
 File: Stat_461_Final_Project_Report_files/figure-latex/logNormality-1.pdf Graph
 ic file (type pdf)
 <use Stat_461_Final_Project_Report_files/figure-latex/logNormality-1.pdf>
 Package pdftex.def Info: Stat_461_Final_Project_Report_files/figure-latex/logNo
-rmality-1.pdf  used on input line 337.
+rmality-1.pdf  used on input line 341.
 (pdftex.def)             Requested size: 361.34912pt x 289.07928pt.
-<Stat_461_Final_Project_Report_files/figure-latex/logNormalityRE-1.pdf, id=187,
+<Stat_461_Final_Project_Report_files/figure-latex/logNormalityRE-1.pdf, id=184,
  361.35pt x 289.08pt>
 File: Stat_461_Final_Project_Report_files/figure-latex/logNormalityRE-1.pdf Gra
 phic file (type pdf)
 <use Stat_461_Final_Project_Report_files/figure-latex/logNormalityRE-1.pdf>
 Package pdftex.def Info: Stat_461_Final_Project_Report_files/figure-latex/logNo
-rmalityRE-1.pdf  used on input line 353.
+rmalityRE-1.pdf  used on input line 357.
 (pdftex.def)             Requested size: 361.34912pt x 289.07928pt.
 [5
 
@@ -910,127 +910,127 @@ s been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.357 
+l.361 
        <./Stat_461_Final_Project_Report_files/figure-latex/logNormality-1.pdf>]
 <Stat_461_Final_Project_Report_files/figure-latex/logHomoscedasticity-1.pdf, id
-=198, 361.35pt x 289.08pt>
+=195, 361.35pt x 289.08pt>
 File: Stat_461_Final_Project_Report_files/figure-latex/logHomoscedasticity-1.pd
 f Graphic file (type pdf)
 <use Stat_461_Final_Project_Report_files/figure-latex/logHomoscedasticity-1.pdf
 >
 Package pdftex.def Info: Stat_461_Final_Project_Report_files/figure-latex/logHo
-moscedasticity-1.pdf  used on input line 370.
+moscedasticity-1.pdf  used on input line 374.
 (pdftex.def)             Requested size: 361.34912pt x 289.07928pt.
 [6pdfTeX warning (ext4): destination with the same identifier (name{figure.4}) 
 has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.373 
+l.377 
        <./Stat_461_Final_Project_Report_files/figure-latex/logNormalityRE-1.pdf
 >]
-<Stat_461_Final_Project_Report_files/figure-latex/logInteraction-1.pdf, id=209,
+<Stat_461_Final_Project_Report_files/figure-latex/logInteraction-1.pdf, id=206,
  469.755pt x 325.215pt>
 File: Stat_461_Final_Project_Report_files/figure-latex/logInteraction-1.pdf Gra
 phic file (type pdf)
 <use Stat_461_Final_Project_Report_files/figure-latex/logInteraction-1.pdf>
 Package pdftex.def Info: Stat_461_Final_Project_Report_files/figure-latex/logIn
-teraction-1.pdf  used on input line 384.
+teraction-1.pdf  used on input line 388.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
 [7pdfTeX warning (ext4): destination with the same identifier (name{figure.5}) 
 has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.386 \subsection
-                 {Multivariate Omnibus <./Stat_461_Final_Project_Report_files/f
-igure-latex/logHomoscedasticity-1.pdf>] [8pdfTeX warning (ext4): destination wi
-th the same identifier (name{table.2}) has been already used, duplicate ignored
+l.390 I
+       n order to use our ANOVA model, we must check for a lack of interaction 
+<./Stat_461_Final_Project_Report_files/figure-latex/logHomoscedasticity-1.pdf>]
 
-
-\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
-                                                  \fi \fi 
-l.425 \subsection
-                 {Omnibus Results}\label{omnibus-results} <./Stat_461_Final_Pro
-ject_Report_files/figure-latex/logInteraction-1.pdf>]
-Overfull \hbox (5.345pt too wide) in paragraph at lines 432--442
+Overfull \hbox (5.345pt too wide) in paragraph at lines 433--443
  [][] 
  []
 
-[9pdfTeX warning (ext4): destination with the same identifier (name{table.3}) h
+[8pdfTeX warning (ext4): destination with the same identifier (name{table.2}) h
 as been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.512 
+l.444 
+       <./Stat_461_Final_Project_Report_files/figure-latex/logInteraction-1.pdf
+>] [9pdfTeX warning (ext4): destination with the same identifier (name{table.3}
+) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.513 
       pdfTeX warning (ext4): destination with the same identifier (name{table.4
 }) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.512 
+l.513 
       ]
-<Stat_461_Final_Project_Report_files/figure-latex/comboplots-1.pdf, id=241, 469
+<Stat_461_Final_Project_Report_files/figure-latex/comboplots-1.pdf, id=239, 469
 .755pt x 216.81pt>
 File: Stat_461_Final_Project_Report_files/figure-latex/comboplots-1.pdf Graphic
  file (type pdf)
 <use Stat_461_Final_Project_Report_files/figure-latex/comboplots-1.pdf>
 Package pdftex.def Info: Stat_461_Final_Project_Report_files/figure-latex/combo
-plots-1.pdf  used on input line 517.
+plots-1.pdf  used on input line 518.
 (pdftex.def)             Requested size: 469.75386pt x 216.80946pt.
-[10pdfTeX warning (ext4): destination with the same identifier (name{figure.6})
- has been already used, duplicate ignored
-
-\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
-                                                  \fi \fi 
-l.551 
-       <./Stat_461_Final_Project_Report_files/figure-latex/comboplots-1.pdf>]
-<Stat_461_Final_Project_Report_files/figure-latex/secondplot-1.pdf, id=257, 469
+<Stat_461_Final_Project_Report_files/figure-latex/secondplot-1.pdf, id=242, 469
 .755pt x 144.54pt>
 File: Stat_461_Final_Project_Report_files/figure-latex/secondplot-1.pdf Graphic
  file (type pdf)
 <use Stat_461_Final_Project_Report_files/figure-latex/secondplot-1.pdf>
 Package pdftex.def Info: Stat_461_Final_Project_Report_files/figure-latex/secon
-dplot-1.pdf  used on input line 557.
+dplot-1.pdf  used on input line 558.
 (pdftex.def)             Requested size: 469.75386pt x 144.53963pt.
-[11pdfTeX warning (ext4): destination with the same identifier (name{figure.7})
+[10pdfTeX warning (ext4): destination with the same identifier (name{figure.6})
  has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.624 
+l.560 \end{figure}
+                   <./Stat_461_Final_Project_Report_files/figure-latex/comboplo
+ts-1.pdf>] [11pdfTeX warning (ext4): destination with the same identifier (name
+{figure.7}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.625 
        <./Stat_461_Final_Project_Report_files/figure-latex/secondplot-1.pdf>] [
 12pdfTeX warning (ext4): destination with the same identifier (name{table.5}) h
 as been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.709 
+l.710 
       pdfTeX warning (ext4): destination with the same identifier (name{table.6
 }) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.709 
+l.710 
       pdfTeX warning (ext4): destination with the same identifier (name{table.7
 }) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.709 
+l.710 
       ] [13]
-Underfull \hbox (badness 10000) in paragraph at lines 753--754
+Underfull \hbox (badness 10000) in paragraph at lines 754--755
 []\T1/lmr/m/n/10 National Cen-ter for Ed-u-ca-tion Statis-tics. (n.d.). Browse 
 CIP Codes. Re-trieved from
  []
 
 [14]
-Overfull \hbox (4.51605pt too wide) in paragraph at lines 794--794
+Overfull \hbox (4.51605pt too wide) in paragraph at lines 795--795
 []|\T1/lmr/m/n/12 midfieldstudents|  
  []
 
 
-Overfull \hbox (7.89238pt too wide) in paragraph at lines 786--799
+Overfull \hbox (7.89238pt too wide) in paragraph at lines 787--800
  [][] 
  []
 
@@ -1039,77 +1039,77 @@ has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.855 
+l.856 
       ] [16]
-<Stat_461_Final_Project_Report_files/figure-latex/normality-1.pdf, id=302, 361.
+<Stat_461_Final_Project_Report_files/figure-latex/normality-1.pdf, id=298, 361.
 35pt x 289.08pt>
 File: Stat_461_Final_Project_Report_files/figure-latex/normality-1.pdf Graphic 
 file (type pdf)
 <use Stat_461_Final_Project_Report_files/figure-latex/normality-1.pdf>
 Package pdftex.def Info: Stat_461_Final_Project_Report_files/figure-latex/norma
-lity-1.pdf  used on input line 885.
+lity-1.pdf  used on input line 886.
 (pdftex.def)             Requested size: 361.34912pt x 289.07928pt.
-<Stat_461_Final_Project_Report_files/figure-latex/normalityRE-1.pdf, id=303, 36
+<Stat_461_Final_Project_Report_files/figure-latex/normalityRE-1.pdf, id=299, 36
 1.35pt x 289.08pt>
 File: Stat_461_Final_Project_Report_files/figure-latex/normalityRE-1.pdf Graphi
 c file (type pdf)
 <use Stat_461_Final_Project_Report_files/figure-latex/normalityRE-1.pdf>
 Package pdftex.def Info: Stat_461_Final_Project_Report_files/figure-latex/norma
-lityRE-1.pdf  used on input line 898.
+lityRE-1.pdf  used on input line 899.
 (pdftex.def)             Requested size: 361.34912pt x 289.07928pt.
 [17pdfTeX warning (ext4): destination with the same identifier (name{figure.8})
  has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.902 
+l.903 
        <./Stat_461_Final_Project_Report_files/figure-latex/normality-1.pdf>]
 <Stat_461_Final_Project_Report_files/figure-latex/homoscedasticity-1.pdf, id=31
-4, 361.35pt x 289.08pt>
+0, 361.35pt x 289.08pt>
 File: Stat_461_Final_Project_Report_files/figure-latex/homoscedasticity-1.pdf G
 raphic file (type pdf)
 <use Stat_461_Final_Project_Report_files/figure-latex/homoscedasticity-1.pdf>
 Package pdftex.def Info: Stat_461_Final_Project_Report_files/figure-latex/homos
-cedasticity-1.pdf  used on input line 916.
+cedasticity-1.pdf  used on input line 917.
 (pdftex.def)             Requested size: 361.34912pt x 289.07928pt.
 [18pdfTeX warning (ext4): destination with the same identifier (name{figure.9})
  has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.919 
+l.920 
        <./Stat_461_Final_Project_Report_files/figure-latex/normalityRE-1.pdf>] 
 [19pdfTeX warning (ext4): destination with the same identifier (name{figure.10}
 ) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.931 \newpage
+l.932 \newpage
                <./Stat_461_Final_Project_Report_files/figure-latex/homoscedasti
 city-1.pdf>]
-<Stat_461_Final_Project_Report_files/figure-latex/secondplot2-1.pdf, id=336, 46
+<Stat_461_Final_Project_Report_files/figure-latex/secondplot2-1.pdf, id=332, 46
 9.755pt x 144.54pt>
 File: Stat_461_Final_Project_Report_files/figure-latex/secondplot2-1.pdf Graphi
 c file (type pdf)
 <use Stat_461_Final_Project_Report_files/figure-latex/secondplot2-1.pdf>
 Package pdftex.def Info: Stat_461_Final_Project_Report_files/figure-latex/secon
-dplot2-1.pdf  used on input line 942.
+dplot2-1.pdf  used on input line 943.
 (pdftex.def)             Requested size: 469.75386pt x 144.53963pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 942--947
+Underfull \hbox (badness 10000) in paragraph at lines 943--948
 [][]
  []
 
-<Stat_461_Final_Project_Report_files/figure-latex/secondplot3-1.pdf, id=337, 46
+<Stat_461_Final_Project_Report_files/figure-latex/secondplot3-1.pdf, id=333, 46
 9.755pt x 144.54pt>
 File: Stat_461_Final_Project_Report_files/figure-latex/secondplot3-1.pdf Graphi
 c file (type pdf)
 <use Stat_461_Final_Project_Report_files/figure-latex/secondplot3-1.pdf>
 Package pdftex.def Info: Stat_461_Final_Project_Report_files/figure-latex/secon
-dplot3-1.pdf  used on input line 981.
+dplot3-1.pdf  used on input line 982.
 (pdftex.def)             Requested size: 469.75386pt x 144.53963pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 981--985
+Underfull \hbox (badness 10000) in paragraph at lines 982--986
 [][]
  []
 
@@ -1118,7 +1118,7 @@ has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.985 
+l.986 
        <./Stat_461_Final_Project_Report_files/figure-latex/secondplot2-1.pdf> <
 ./Stat_461_Final_Project_Report_files/figure-latex/secondplot3-1.pdf>] [21pdfTe
 X warning (ext4): destination with the same identifier (name{table.10}) has bee
@@ -1126,182 +1126,182 @@ n already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.1013 \newpage
+l.1014 \newpage
                ]
 
-Package xcolor Warning: Incompatible color definition on input line 1017.
+Package xcolor Warning: Incompatible color definition on input line 1018.
 
 LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 1
-018.
+019.
 (c:/Users/Javier/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <10> not available
-(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 1019.
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 1020.
 LaTeX Font Info:    Trying to load font information for TS1+lmtt on input line 
-1091.
+1092.
 (c:/Users/Javier/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/ts1lmtt.fd
 File: ts1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 
-Package xcolor Warning: Incompatible color definition on input line 1481.
+Package xcolor Warning: Incompatible color definition on input line 1482.
 
 
-Package xcolor Warning: Incompatible color definition on input line 1481.
+Package xcolor Warning: Incompatible color definition on input line 1482.
 
 
-Package xcolor Warning: Incompatible color definition on input line 1481.
+Package xcolor Warning: Incompatible color definition on input line 1482.
 
 [22]
 
-Package xcolor Warning: Incompatible color definition on input line 1481.
+Package xcolor Warning: Incompatible color definition on input line 1482.
 
 
-Package xcolor Warning: Incompatible color definition on input line 1481.
+Package xcolor Warning: Incompatible color definition on input line 1482.
 
 
-Underfull \vbox (badness 10000) detected at line 1481
+Underfull \vbox (badness 10000) detected at line 1482
  []
 
 
-Underfull \vbox (badness 10000) detected at line 1481
+Underfull \vbox (badness 10000) detected at line 1482
  []
 
 
-Package xcolor Warning: Incompatible color definition on input line 1481.
+Package xcolor Warning: Incompatible color definition on input line 1482.
 
 [23]
 
-Package xcolor Warning: Incompatible color definition on input line 1481.
+Package xcolor Warning: Incompatible color definition on input line 1482.
 
 
-Package xcolor Warning: Incompatible color definition on input line 1481.
+Package xcolor Warning: Incompatible color definition on input line 1482.
 
 
-Underfull \vbox (badness 10000) detected at line 1481
+Underfull \vbox (badness 10000) detected at line 1482
  []
 
 
-Underfull \vbox (badness 10000) detected at line 1481
+Underfull \vbox (badness 10000) detected at line 1482
  []
 
 
-Package xcolor Warning: Incompatible color definition on input line 1481.
+Package xcolor Warning: Incompatible color definition on input line 1482.
 
 [24]
 
-Package xcolor Warning: Incompatible color definition on input line 1481.
+Package xcolor Warning: Incompatible color definition on input line 1482.
 
 
-Package xcolor Warning: Incompatible color definition on input line 1481.
+Package xcolor Warning: Incompatible color definition on input line 1482.
 
 
-Underfull \vbox (badness 10000) detected at line 1481
+Underfull \vbox (badness 10000) detected at line 1482
  []
 
 
-Underfull \vbox (badness 10000) detected at line 1481
+Underfull \vbox (badness 10000) detected at line 1482
  []
 
 
-Package xcolor Warning: Incompatible color definition on input line 1481.
+Package xcolor Warning: Incompatible color definition on input line 1482.
 
 [25]
 
-Package xcolor Warning: Incompatible color definition on input line 1481.
+Package xcolor Warning: Incompatible color definition on input line 1482.
 
 
-Package xcolor Warning: Incompatible color definition on input line 1481.
+Package xcolor Warning: Incompatible color definition on input line 1482.
 
 
-Underfull \vbox (badness 10000) detected at line 1481
+Underfull \vbox (badness 10000) detected at line 1482
  []
 
 
-Underfull \vbox (badness 10000) detected at line 1481
+Underfull \vbox (badness 10000) detected at line 1482
  []
 
 
-Package xcolor Warning: Incompatible color definition on input line 1481.
+Package xcolor Warning: Incompatible color definition on input line 1482.
 
 [26]
 
-Package xcolor Warning: Incompatible color definition on input line 1481.
+Package xcolor Warning: Incompatible color definition on input line 1482.
 
 
-Package xcolor Warning: Incompatible color definition on input line 1481.
+Package xcolor Warning: Incompatible color definition on input line 1482.
 
 
-Underfull \vbox (badness 10000) detected at line 1481
+Underfull \vbox (badness 10000) detected at line 1482
  []
 
 
-Underfull \vbox (badness 10000) detected at line 1481
+Underfull \vbox (badness 10000) detected at line 1482
  []
 
 
-Package xcolor Warning: Incompatible color definition on input line 1481.
+Package xcolor Warning: Incompatible color definition on input line 1482.
 
 [27]
 
-Package xcolor Warning: Incompatible color definition on input line 1481.
+Package xcolor Warning: Incompatible color definition on input line 1482.
 
 
-Package xcolor Warning: Incompatible color definition on input line 1481.
+Package xcolor Warning: Incompatible color definition on input line 1482.
 
 
-Underfull \vbox (badness 10000) detected at line 1481
+Underfull \vbox (badness 10000) detected at line 1482
  []
 
 
-Underfull \vbox (badness 10000) detected at line 1481
+Underfull \vbox (badness 10000) detected at line 1482
  []
 
 
-Package xcolor Warning: Incompatible color definition on input line 1481.
+Package xcolor Warning: Incompatible color definition on input line 1482.
 
 [28]
 
-Package xcolor Warning: Incompatible color definition on input line 1481.
+Package xcolor Warning: Incompatible color definition on input line 1482.
 
 
-Package xcolor Warning: Incompatible color definition on input line 1481.
+Package xcolor Warning: Incompatible color definition on input line 1482.
 
 
-Underfull \vbox (badness 10000) detected at line 1481
+Underfull \vbox (badness 10000) detected at line 1482
  []
 
 
-Underfull \vbox (badness 10000) detected at line 1481
+Underfull \vbox (badness 10000) detected at line 1482
  []
 
 
-Package xcolor Warning: Incompatible color definition on input line 1481.
+Package xcolor Warning: Incompatible color definition on input line 1482.
 
 [29]
 
-Package xcolor Warning: Incompatible color definition on input line 1481.
+Package xcolor Warning: Incompatible color definition on input line 1482.
 
 
-Package xcolor Warning: Incompatible color definition on input line 1481.
+Package xcolor Warning: Incompatible color definition on input line 1482.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1483.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1484.
 [30]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 1483.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1484.
 (./Stat_461_Final_Project_Report.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1483.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1483.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1484.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1484.
 
 Package rerunfilecheck Info: File `Stat_461_Final_Project_Report.out' has not c
 hanged.
-(rerunfilecheck)             Checksum: 6DE9692D15DB6C527CFDDC52AF3CF600;5986.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1483.
+(rerunfilecheck)             Checksum: D35BE23DAF7CAEA33F835EED09B3B5AF;5782.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1484.
  ) 
 Here is how much of TeX's memory you used:
- 12711 strings out of 482605
- 188756 string characters out of 5950339
- 532883 words of memory out of 5000000
- 27920 multiletter control sequences out of 15000+600000
+ 12708 strings out of 482605
+ 188696 string characters out of 5950339
+ 533822 words of memory out of 5000000
+ 27918 multiletter control sequences out of 15000+600000
  603498 words of font info for 78 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  34i,11n,37p,572b,356s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1329,10 +1329,10 @@ lm/lmsy10.pfb><c:/Users/Javier/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/p
 ublic/lm/lmtk10.pfb><c:/Users/Javier/AppData/Roaming/TinyTeX/texmf-dist/fonts/t
 ype1/public/lm/lmtt10.pfb><c:/Users/Javier/AppData/Roaming/TinyTeX/texmf-dist/f
 onts/type1/public/lm/lmtti10.pfb>
-Output written on Stat_461_Final_Project_Report.pdf (30 pages, 529018 bytes).
+Output written on Stat_461_Final_Project_Report.pdf (30 pages, 529891 bytes).
 PDF statistics:
- 487 PDF objects out of 1000 (max. 8388607)
- 402 compressed objects within 5 object streams
- 91 named destinations out of 1000 (max. 500000)
- 311 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 481 PDF objects out of 1000 (max. 8388607)
+ 397 compressed objects within 4 object streams
+ 90 named destinations out of 1000 (max. 500000)
+ 303 words of extra memory for PDF output out of 10000 (max. 10000000)
 

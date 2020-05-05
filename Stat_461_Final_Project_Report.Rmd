@@ -91,11 +91,15 @@ hasseDiagram::hasse(AMat, ALabs)
 
 As explained above, we will use ANOVA to conduct the analysis. After analyzing the Hasse diagram found in Figure \ref{fig:hasse}, we decided the best model to use for our study is a One Way Repeated Measures (Within-Subjects) ANOVA Model.  This method is effective because we can observe if there are statistically significant differences in the sample arithmetic means between each school year. This will also allow to reduce the amount of subject-to-subject variation present within our model by applying each "year treatment" to each individual institution. If we were to find evidence to reject the null hypothesis that there is no statistically significant difference between the sample arithmetic means, we could then conduct post-hoc analysis to determine if later years caused the proportion of women in STEM to increase. The null and alternative hypothesis are formally expressed below. 
 
-INSERT HYPOTHESIS CORRECTLY
+
+$H_0$: There is no statistically significant difference in the proportion of women graduating
+with STEM degrees within our collection of institutions due to the term year.
+
+$H_1$: Not  $H_0$. 
+
 
 ###Type I Error Rate
-We have decided that we will control Experimentwise Error Rate at 10% (\(\mathcal{E}_{I}=0.10\)) for both
-components of our study (ANOVA and Logistic Regression portions). Given the low-stakes
+We have decided that we will control Experimentwise Error Rate at 10% (\(\mathcal{E}_{I}=0.10\)) for both components of our study (ANOVA and Logistic Regression portions). Given the low-stakes
 nature of our study, we believed it was reasonable to use a more liberal Type I Error control
 method. Having a Type I Error would not cause a significant impact nor incur overwhelming
 costs, so having a low evidentiary requirement is justified. The EER will be naturally controlled through the use of our ANOVA F Test of our model. We also plan to set our unusualness threshold at the same level as our Type I Error Rate (*UT* = 0.10).
@@ -265,8 +269,6 @@ ggplot(data = df2,
   scale_x_discrete(breaks=seq(1994, 2002, 2))
 ```
 
-##Multivariate Omnibus Results
-
 ```{r multiV2, warning=FALSE, echo=FALSE}
 df2Wide <- tidyr::pivot_wider(df2,id_cols = inst, names_from = tp, values_from = logp)
 responseWide <- as.matrix(df2Wide[ , 2:11])
@@ -278,7 +280,6 @@ idesign = ~Term_Year, type = "III")
  
 midfieldMultivariate <- summary(outputMV, multivariate=FALSE)
 ```
-
 
 In order to use our ANOVA model, we must check for a lack of interaction between our subjects. Using the interaction plots above, we are given the individual plots for the log-proportion of women graduating in STEM by term year. Within the plot, we see potential interactions present such as between the years 1995 and 1996 for institution's A and G. However there appear to be few visual cues of interactions present, so we will proceed with caution and assume that there is no interaction present.
 
